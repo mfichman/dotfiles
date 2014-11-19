@@ -1,0 +1,112 @@
+#!/bin/env lua
+
+local table = require('table')
+local os = require('os')
+local io = require('io')
+
+local home = os.getenv('HOME')
+local config = string.format('%s/.session.lua', home)
+local chunk = loadfile(config, 't', {})
+local session
+if chunk then 
+  session = chunk() or {}
+else
+  session = {}
+end
+  
+-- Print 'level' indents
+function indent(level, out)
+  for i=1,level do table.insert(out, '  ') end
+end
+
+-- Pretty print an object in Lua syntax, so that it can be parsed by loadfile
+function dump(object, level, out)
+  local kind = type(object)
+  if kind == 'number' then
+    table.insert(out, object)
+  elseif kind == 'boolean' then
+    table.insert(out, object)
+  elseif kind == 'string' then
+    table.insert(out, string.format("'%s'", object)) -- FIXME: Escape
+  elseif kind == 'table' then
+    table.insert(out, '{\n')
+    for k, v in pairs(object) do
+      indent(level+1, out)
+      table.insert(out, '[')
+      dump(k, level+1, out)
+      table.insert(out, '] = ')
+      dump(v, level+1, out)
+      table.insert(out, ',\n')
+    end
+    indent(level+0, out)
+    table.insert(out, '}')
+  else
+    error('bad type: '..kind)
+  end
+
+  return out
+end
+
+-- Save an object in Lua syntax, so that loadfile can parse it
+function save()
+  local out = dump(session, 0, {})
+  local fd = io.open(config, 'w')
+  fd:write('return ')
+  fd:write(table.concat(out))
+  fd:close()
+end
+
+-- Create a new session
+function create(name, host, arg)
+  local cmd 
+  if arg and #arg > 0 then
+    cmd = table.concat(arg, ' ')
+  else
+    cmd = 'bash'
+  end
+  session[name] = {host=host, name=name, date=os.time(), cmd=cmd}
+  save() 
+  connect(name, host, cmd)
+end
+
+-- Connect to host with the given arg, and save the session details
+function connect(name, host, cmd)
+  if host == 'localhost' then
+    local format = 'screen -t %s -dRR %s %s'
+    os.execute(string.format(format, name, name, cmd))
+  else
+    local format = 'ssh -tt %s screen -t %s -dRR %s %s'
+    os.execute(string.format(format, host, name, name, cmd))
+  end
+end
+
+-- Reconnect an existing session
+function reconnect(name, host)
+  local session = session[name]
+  if not name then
+    error('session not found')
+  end
+  connect(name, session.host, session.cmd)
+end
+
+-- List all saved sessions
+function list()
+  for k, v in pairs(session) do
+    print(os.date(nil, v.date), v.name, v.host, v.cmd)
+  end
+end
+
+-- Parse args, decide what operation to call
+function main()
+  local name = table.remove(arg, 1)
+  local host = table.remove(arg, 1)
+  if not name then 
+    list()
+  elseif host then
+    create(name, host, arg)
+  else
+    reconnect(name)
+  end
+end
+
+main()
