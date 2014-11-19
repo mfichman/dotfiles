@@ -1,12 +1,12 @@
 syn keyword tacKeyword if while foreach for wait timeout overriding continue break
-syn keyword tacKeyword invasive overridden coroutine sparse stack queue 
+syn keyword tacKeyword invasive overridden coroutine sparse stack queue collection
 syn keyword tacKeyword extern array extensible initially else new embedded return
 syn keyword tacKeyword inline overridden overridable static this ordered
 
 syn keyword tacKeyword namespace mutable forward default operator
 syn keyword tacKeyword inlineImplFile implFile constAttr enum indexedAttr friendAtter
 syn keyword tacKeyword constraint range friendAttr aliasAttr enumId procedure
-syn keyword tacKeyword parentAttr overloading or local immutable overlay 
+syn keyword tacKeyword parentAttr overloading or local immutable overlay
 "syn match tacKeyword "\(+[A-Za-z]\+\)\?\(-[A-Za-z]\+\)\?"
 
 
@@ -34,10 +34,7 @@ syn keyword tacType int short byte bool void char float double
 "
 syn match tacKeyword "\(:[ ]\)\@<=out\> *[A-Z]\@="
 syn match tacKeyword "\(:[ ]\)\@<=in\> *[A-Z]\@="
-syn match tacKeyword "inout"
-syn match tacKeyword "inout ="
-syn match tacKeyword "in ="
-
+syn match tacKeyword "\(:[ ]\)\@<=inout\> *[A-Z]\@="
 
 syn keyword tacFlag contained null default index iterator range operator clone on 
 syn keyword tacFlag contained activity generator inverse impl isArrayAttr 

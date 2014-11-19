@@ -10,6 +10,7 @@ set nowrap
 "colors molokai
 "colors default
 colors solarized
+"colors default
 "set background=dark
 set ruler
 set tabstop=3
