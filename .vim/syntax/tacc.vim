@@ -1,12 +1,12 @@
 syn keyword tacKeyword if while foreach for wait timeout overriding continue break
-syn keyword tacKeyword invasive overridden coroutine sparse stack queue collection
+syn keyword tacKeyword invasive overridden coroutine sparse stack queue 
 syn keyword tacKeyword extern array extensible initially else new embedded return
 syn keyword tacKeyword inline overridden overridable static this ordered
 
 syn keyword tacKeyword namespace mutable forward default operator
 syn keyword tacKeyword inlineImplFile implFile constAttr enum indexedAttr friendAtter
 syn keyword tacKeyword constraint range friendAttr aliasAttr enumId procedure
-syn keyword tacKeyword parentAttr overloading or local immutable
+syn keyword tacKeyword parentAttr overloading or local immutable overlay 
 "syn match tacKeyword "\(+[A-Za-z]\+\)\?\(-[A-Za-z]\+\)\?"
 
 
@@ -20,8 +20,9 @@ syn region tacString start=+"+ end=+"+ skip=+\\"+
 syn region tacString start=+'+ end=+'+ skip=+\\'+
 
 syn keyword tacConstant true false 
-syn keyword tacOperator + - / * <> == != ^ ?
+syn keyword tacOperator + - / * <> == != ^ ? 
 syn match tacNumber "\<[0-9][0-9]*\>"
+syn match tacNumber "\<0x[0-9A-Fa-f]*\>"
 syn match tacFunction "[@][a-z][a-zA-Z0-9_]*"
 "syn match tacFunction "[a-z][A-Za-z0-9_]*(\@="
 syn match tacIdentifier "[a-z][A-Za-z_0-9]*"
@@ -33,7 +34,9 @@ syn keyword tacType int short byte bool void char float double
 "
 syn match tacKeyword "\(:[ ]\)\@<=out\> *[A-Z]\@="
 syn match tacKeyword "\(:[ ]\)\@<=in\> *[A-Z]\@="
-syn match tacKeyword "\(:[ ]\)\@<=inout\> *[A-Z]\@="
+syn match tacKeyword "inout"
+syn match tacKeyword "inout ="
+syn match tacKeyword "in ="
 
 
 syn keyword tacFlag contained null default index iterator range operator clone on 
@@ -63,7 +66,8 @@ syn keyword tacFlag contained period isNotifyingByDefault isAppliedOnDelete
 syn keyword tacFlag contained isAppliedInDestructor allowsNotifiee allowsMultipleWriters
 syn keyword tacFlag contained hasProxyUpdatesReflected hasBarrierSemantics
 syn keyword tacFlag contained isDSafeCertified allowsIndirectRef allowsCoalescedProxyUpdates
-syn keyword tacFlag contained isInterfaceType
+syn keyword tacFlag contained isInterfaceType deletesOnFalse isAppliedAfterNotification
+syn keyword tacFlag contained hasPtrIf hasAttrLog
 syn match tacFlag contained "+=\|=\|-="
 syn match tacFlagStart contained "`"
 syn match tacFlagDef "`\([A-Za-z0-9]*\|+=\|=\|-=\)" contains=tacFlag,tacFlagStart

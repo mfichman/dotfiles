@@ -7,8 +7,9 @@ set nowrap
 "colors solarized
 "colors github
 "colors solarized
-colors molokai
+"colors molokai
 "colors default
+colors solarized
 "set background=dark
 set ruler
 set tabstop=3
@@ -52,5 +53,8 @@ noremap <Right> <Nop>
 :au BufNewFile *.py 0r ~/.vim/skeleton.py | $
 
 
-
+set tags=./tags,~/tags
 set path+=/usr/include/**
+
+autocmd FileType lua setlocal shiftwidth=2 tabstop=2
+
