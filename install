@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+find * -type d | xargs -I% mkdir -p ~/.%
+find * -type f | xargs -I% ln -snf % ~/.%
