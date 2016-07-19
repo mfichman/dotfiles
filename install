@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-find * -type d | xargs -I% mkdir -p ~/.%
-find * -type f | xargs -I% ln -snf % ~/.%
+find * -type d | xargs -n1 -I% mkdir -p ~/.%
+find * -type f | xargs -n1 -I% ln -snf $(pwd)/% ~/.%

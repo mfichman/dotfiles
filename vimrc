@@ -27,12 +27,12 @@ au BufRead,BufNewFile *.vert set filetype=glsl
 au BufRead,BufNewFile *.lua setlocal cms=--%s com=s:--[[,m:\ ,e:]],:--
 
 " Templates for various filetypes
-au BufNewFile *.cfg 0r ~/.vim/skeleton.cpp | $
-au BufNewFile *.cpp 0r ~/.vim/skeleton.cpp | $
-au BufNewFile *.h 0r ~/.vim/skeleton.cpp | $
-au BufNewFile *.hpp 0r ~/.vim/skeleton.cpp | $
-au BufNewFile *.lua 0r ~/.vim/skeleton.lua | $
-au BufNewFile *.py 0r ~/.vim/skeleton.py | $
+au BufNewFile *.cfg 0r ~/.vim/templates/cpp | $
+au BufNewFile *.cpp 0r ~/.vim/templates/cpp | $
+au BufNewFile *.h 0r ~/.vim/templates/cpp | $
+au BufNewFile *.hpp 0r ~/.vim/templtes/cpp | $
+au BufNewFile *.lua 0r ~/.vim/templates/lua | $
+au BufNewFile *.py 0r ~/.vim/templates/.py | $
 
 " Set custom tabstops for scripting languages
 autocmd FileType html setlocal shiftwidth=2 tabstop=2
