@@ -7,9 +7,11 @@ set rtp+=~/.vim/bundle/Vundle.vim
 set nocompatible
 filetype off   
 call vundle#begin()
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'Valloric/YouCompleteMe'
+Plugin 'git://git.wincent.com/command-t.git'
 Plugin 'rdnetto/YCM-Generator'
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'vim-ruby/vim-ruby'
+Plugin 'VundleVim/Vundle.vim'
 call vundle#end()
 
 " Completer options
@@ -41,14 +43,15 @@ au BufNewFile *.py lua skeleton('py')
 au BufNewFile *.vert lua skeleton('glsl')
 
 " Set custom tabstops for scripting languages
-autocmd FileType css setlocal shiftwidth=2 tabstop=2
-autocmd FileType html setlocal shiftwidth=2 tabstop=2
-autocmd FileType js setlocal shiftwidth=2 tabstop=2
-autocmd FileType lua setlocal shiftwidth=2 tabstop=2
-autocmd FileType ruby setlocal shiftwidth=2 tabstop=2
+au FileType css setlocal shiftwidth=2 tabstop=2
+au FileType erb setlocal shiftwidth=2 tabstop=2
+au FileType html setlocal shiftwidth=2 tabstop=2
+au FileType js setlocal shiftwidth=2 tabstop=2
+au FileType lua setlocal shiftwidth=2 tabstop=2
+au FileType rb setlocal shiftwidth=2 tabstop=2
 
 " Disable annoying bells
-autocmd GUIEnter * set visualbell t_vb=
+au GUIEnter * set visualbell t_vb=
 let g:netrw_silent = 1
 set noerrorbells
 set noerrorbells visualbell t_vb=
