@@ -19,7 +19,7 @@ local function findSkeletonFile(ext)
       dir = dir:match('(.+)/.-$')
     end
   end
-  return os.getenv('HOME')..'/.vim/skeleton.'..ext
+  return os.getenv('HOME')..'/.vim/skeleton/'..ext
 end
 
 -- Set the current buffer with the contents of the skeleton file.

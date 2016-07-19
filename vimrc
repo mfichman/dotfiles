@@ -1,4 +1,6 @@
 
+" Set up Lua
+luafile ~/.vim/scripts/init.lua
 
 " Packages and package settings
 set rtp+=~/.vim/bundle/Vundle.vim
@@ -27,16 +29,21 @@ au BufRead,BufNewFile *.vert set filetype=glsl
 au BufRead,BufNewFile *.lua setlocal cms=--%s com=s:--[[,m:\ ,e:]],:--
 
 " Templates for various filetypes
-au BufNewFile *.cfg 0r ~/.vim/templates/cpp | $
-au BufNewFile *.cpp 0r ~/.vim/templates/cpp | $
-au BufNewFile *.h 0r ~/.vim/templates/cpp | $
-au BufNewFile *.hpp 0r ~/.vim/templtes/cpp | $
-au BufNewFile *.lua 0r ~/.vim/templates/lua | $
-au BufNewFile *.py 0r ~/.vim/templates/.py | $
+au BufNewFile *.c lua skeleton('c')
+au BufNewFile *.cfg lua skeleton('cfg')
+au BufNewFile *.cpp lua skeleton('cpp')
+au BufNewFile *.frag lua skeleton('glsl')
+au BufNewFile *.geom lua skeleton('glsl')
+au BufNewFile *.glsl lua skeleton('glsl')
+au BufNewFile *.h lua skeleton('h')
+au BufNewFile *.lua lua skeleton('lua')
+au BufNewFile *.py lua skeleton('py')
+au BufNewFile *.vert lua skeleton('glsl')
 
 " Set custom tabstops for scripting languages
+autocmd FileType css setlocal shiftwidth=2 tabstop=2
 autocmd FileType html setlocal shiftwidth=2 tabstop=2
-autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
+autocmd FileType js setlocal shiftwidth=2 tabstop=2
 autocmd FileType lua setlocal shiftwidth=2 tabstop=2
 autocmd FileType ruby setlocal shiftwidth=2 tabstop=2
 
@@ -65,3 +72,12 @@ filetype plugin indent on
 set expandtab
 set tabstop=4
 
+" Key mappings
+inoremap <Down> <Nop>
+inoremap <Left> <Nop>
+inoremap <Right> <Nop>
+inoremap <Up> <Nop>
+noremap <Down> <Nop>
+noremap <Left> <Nop>
+noremap <Right> <Nop>
+noremap <Up> <Nop>
