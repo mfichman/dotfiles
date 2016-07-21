@@ -1,3 +1,5 @@
+" Fix RTP for Windows 
+set rtp+=~/.vim
 
 " Set up Lua
 luafile ~/.vim/scripts/init.lua
@@ -19,13 +21,19 @@ noremap gd :YcmCompleter GoTo<CR>
 let g:ycm_confirm_extra_conf=0
 
 " Filetype handling
-au BufNew,BufRead *.ll setf lex
+au BufRead,BufNewFile *.ll setf lex
 au BufRead,BufNewFile *.c2 set filetype=c2
 au BufRead,BufNewFile *.frag set filetype=glsl
 au BufRead,BufNewFile *.geom set filetype=glsl
 au BufRead,BufNewFile *.glsl set filetype=glsl
 au BufRead,BufNewFile *.go set filetype=go 
 au BufRead,BufNewFile *.vert set filetype=glsl
+au BufRead,BufNewFile *.c2 setf c2
+
+"au BufNew,BufRead *.glsl setf glsl330
+"au BufNew,BufRead *.vert setf glsl330
+"au BufNew,BufRead *.frag setf glsl330
+"au BufNew,BufRead *.geom setf glsl330
 
 " Fix lua comment formatting
 au BufRead,BufNewFile *.lua setlocal cms=--%s com=s:--[[,m:\ ,e:]],:--
@@ -41,12 +49,14 @@ au BufNewFile *.h lua skeleton('h')
 au BufNewFile *.lua lua skeleton('lua')
 au BufNewFile *.py lua skeleton('py')
 au BufNewFile *.vert lua skeleton('glsl')
+au BufNewFile *.jg lua skeleton('jg')
 
 " Set custom tabstops for scripting languages
 au FileType css setlocal shiftwidth=2 tabstop=2
 au FileType erb setlocal shiftwidth=2 tabstop=2
 au FileType html setlocal shiftwidth=2 tabstop=2
 au FileType js setlocal shiftwidth=2 tabstop=2
+au FileType jsx setlocal shiftwidth=2 tabstop=2
 au FileType lua setlocal shiftwidth=2 tabstop=2
 au FileType rb setlocal shiftwidth=2 tabstop=2
 
@@ -59,16 +69,28 @@ set noerrorbells visualbell t_vb=
 " Syntax highlighting
 syntax on
 colors github
-set bg=light
+set background=light
 
 " Chrome options
-set guioptions-=m
-set guioptions-=r
-set guioptions-=T
+set backspace=2
+set encoding=utf-8
+set expandtab
+set fileencoding=utf-8
+"set guifont=consolas:h10:cDEFAULT
+set guioptions=
+set nobomb
+set noerrorbells
+set novisualbell
 set nowrap
 set number
 set ruler
-set t_Co=256
+set tabstop=4
+
+" Code folding
+set foldmethod=syntax
+set foldnestmax=1
+"set foldlevel=0
+set foldenable
 
 " Tab formatting options
 filetype plugin indent on
