@@ -76,7 +76,6 @@ set backspace=2
 set encoding=utf-8
 set expandtab
 set fileencoding=utf-8
-"set guifont=consolas:h10:cDEFAULT
 set guioptions=
 set nobomb
 set noerrorbells
@@ -85,6 +84,9 @@ set nowrap
 set number
 set ruler
 set tabstop=4
+if has("win32")
+    set guifont=consolas:h10:cDEFAULT
+endif
 
 " Code folding
 set foldmethod=syntax
