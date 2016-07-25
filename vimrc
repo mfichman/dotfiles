@@ -9,11 +9,14 @@ set rtp+=~/.vim/bundle/Vundle.vim
 set nocompatible
 filetype off   
 call vundle#begin()
-Plugin 'git://git.wincent.com/command-t.git'
-Plugin 'rdnetto/YCM-Generator'
-Plugin 'Valloric/YouCompleteMe'
 Plugin 'vim-ruby/vim-ruby'
 Plugin 'VundleVim/Vundle.vim'
+Plugin 'https://github.com/kien/ctrlp.vim.git'
+if !has("win32")
+"Plugin 'git://git.wincent.com/command-t.git'
+    Plugin 'rdnetto/YCM-Generator'
+    Plugin 'Valloric/YouCompleteMe'
+endif
 call vundle#end()
 
 " Completer options
