@@ -48,7 +48,7 @@ au FileType erb setlocal shiftwidth=2 tabstop=2
 au FileType html setlocal shiftwidth=2 tabstop=2
 au FileType js setlocal shiftwidth=2 tabstop=2
 au FileType lua setlocal shiftwidth=2 tabstop=2
-au FileType rb setlocal shiftwidth=2 tabstop=2
+au FileType ruby set shiftwidth=2 tabstop=2 softtabstop=2
 
 " Disable annoying bells
 au GUIEnter * set visualbell t_vb=
