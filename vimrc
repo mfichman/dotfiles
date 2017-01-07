@@ -12,11 +12,6 @@ call vundle#begin()
 Plugin 'vim-ruby/vim-ruby'
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'https://github.com/kien/ctrlp.vim.git'
-if !has("win32")
-"Plugin 'git://git.wincent.com/command-t.git'
-    Plugin 'rdnetto/YCM-Generator'
-    Plugin 'Valloric/YouCompleteMe'
-endif
 call vundle#end()
 
 " Completer options
@@ -87,15 +82,17 @@ set nowrap
 set number
 set ruler
 set tabstop=4
+set softtabstop=4
+set shiftwidth=4
 if has("win32")
     set guifont=consolas:h10:cDEFAULT
 endif
 
 " Code folding
-set foldmethod=syntax
-set foldnestmax=1
+"set foldmethod=syntax
+"set foldnestmax=1
 "set foldlevel=0
-set foldenable
+"set foldenable
 
 " Tab formatting options
 filetype plugin indent on
