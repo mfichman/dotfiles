@@ -5,18 +5,13 @@ set rtp+=~/.vim
 luafile ~/.vim/scripts/init.lua
 
 " Packages and package settings
-set rtp+=~/.vim/bundle/Vundle.vim
 set nocompatible
 filetype off   
-call vundle#begin()
-Plugin 'vim-ruby/vim-ruby'
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'https://github.com/kien/ctrlp.vim.git'
-call vundle#end()
 
-" Completer options
-noremap gd :YcmCompleter GoTo<CR>
-let g:ycm_confirm_extra_conf=0
+call plug#begin()
+Plug 'vim-ruby/vim-ruby'
+Plug 'https://github.com/kien/ctrlp.vim.git'
+call plug#end()
 
 " Filetype handling
 au BufRead,BufNewFile *.ll setf lex
