@@ -105,6 +105,7 @@ noremap <Left> <Nop>
 noremap <Right> <Nop>
 noremap <Up> <Nop>
 
+" Remap ESC key
+inoremap jk <Esc>
+
 set wildignore+=*/.git/*,*/bundle/*,*/tmp/*,log/*
-
-
