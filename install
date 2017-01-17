@@ -1,4 +1,3 @@
 #!/usr/bin/env bash
 
 find * -maxdepth 0 | xargs -n1 -I% ln -snf $(pwd)/% ~/.%
-git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
