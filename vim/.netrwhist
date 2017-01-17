@@ -1,0 +1,11 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =9
+let g:netrw_dirhist_1='/Users/matt/Code/titan/app/views/admin/orders'
+let g:netrw_dirhist_2='/Users/matt/Code/titan/app/assets/javascripts/store/views/pages'
+let g:netrw_dirhist_3='/Users/matt/Code/titan/app/assets/javascripts/store/views/products'
+let g:netrw_dirhist_4='/Users/matt/Code/titan/app/controllers/store'
+let g:netrw_dirhist_5='/Users/matt/Code/titan/app/views/store'
+let g:netrw_dirhist_6='/Users/matt/Code/titan/app/views/store/components'
+let g:netrw_dirhist_7='/Users/matt/Code/titan/app/assets/javascripts/store/views/carts'
+let g:netrw_dirhist_8='/Users/matt/Code/titan/app/validators/checkout'
+let g:netrw_dirhist_9='/Users/matt/Code/titan/app/assets/stylesheets/store/views/carts'
