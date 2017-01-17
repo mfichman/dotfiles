@@ -10,12 +10,30 @@ luafile ~/.vim/scripts/init.lua
 
 " Packages and package settings
 set nocompatible
+<<<<<<< HEAD
 filetype off
+call vundle#begin()
+Plugin 'vim-ruby/vim-ruby'
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'https://github.com/kien/ctrlp.vim.git'
+if !has("win32")
+"Plugin 'git://git.wincent.com/command-t.git'
+"Plugin 'rdnetto/YCM-Generator'
+"Plugin 'Valloric/YouCompleteMe'
+endif
+call vundle#end()
+
+" Completer options
+"noremap gd :YcmCompleter GoTo<CR>
+let g:ycm_confirm_extra_conf=0
+=======
+filetype off   
 
 call plug#begin()
 Plug 'vim-ruby/vim-ruby'
 Plug 'https://github.com/kien/ctrlp.vim.git'
 call plug#end()
+>>>>>>> 72eaa6171b7375f6ae6755c72ad30605adf8941b
 
 " Filetype handling
 au BufRead,BufNewFile *.ll setf lex
@@ -49,12 +67,12 @@ au BufNewFile *.vert lua skeleton('glsl')
 au BufNewFile *.jg lua skeleton('jg')
 
 " Set custom tabstops for scripting languages
-au FileType css set shiftwidth=2 tabstop=2 softtabstop=2
-au FileType erb set shiftwidth=2 tabstop=2 softtabstop=2
-au FileType html set shiftwidth=2 tabstop=2 softtabstop=2
-au FileType js set shiftwidth=2 tabstop=2 softtabstop=2
-au FileType jsx set shiftwidth=2 tabstop=2 softtabstop=2
-au FileType lua set shiftwidth=2 tabstop=2 softtabstop=2
+au FileType css set shiftwidth=2 tabstop=2
+au FileType erb set shiftwidth=2 tabstop=2
+au FileType html set shiftwidth=2 tabstop=2
+au FileType js set shiftwidth=2 tabstop=2
+au FileType jsx set shiftwidth=2 tabstop=2
+au FileType lua set shiftwidth=2 tabstop=2
 au FileType ruby set shiftwidth=2 tabstop=2 softtabstop=2
 
 " Disable annoying bells
@@ -69,8 +87,6 @@ set background=light
 " Tabs/whitespace
 set expandtab
 set tabstop=4
-set softtabstop=4
-set shiftwidth=4
 au BufWritePre * :%s/\s\+$//e
 
 " Chrome options
@@ -82,6 +98,12 @@ set nobomb
 set nowrap
 set number
 set ruler
+<<<<<<< HEAD
+=======
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+>>>>>>> 72eaa6171b7375f6ae6755c72ad30605adf8941b
 if has("win32")
     set guifont=consolas:h10:cDEFAULT
 endif
@@ -94,6 +116,8 @@ endif
 
 " Tab formatting options
 filetype plugin indent on
+set expandtab
+set tabstop=4
 
 " Key mappings
 inoremap <Down> <Nop>
