@@ -1,4 +1,4 @@
-# home
+# Matt Fichman's "Dotfiles"
 Clone of my home directory and vim settings.
 
 ## Usage
