@@ -3,7 +3,7 @@ set rtp+=~/.vim
 
 " CTRL-P options
 let g:ctrlp_follow_symlinks = 0
-let g:ctrlp_working_path_mode = 'r'
+let g:ctrlp_working_path_mode = 'a'
 
 " Set up Lua
 luafile ~/.vim/scripts/init.lua
@@ -14,7 +14,10 @@ filetype off
 
 call plug#begin()
 Plug 'vim-ruby/vim-ruby'
+Plug 'tpope/vim-fugitive'
+Plug 'Glench/Vim-Jinja2-Syntax'
 Plug 'https://github.com/kien/ctrlp.vim.git'
+Plug 'yegappan/greplace'
 call plug#end()
 
 " Filetype handling
@@ -26,6 +29,12 @@ au BufRead,BufNewFile *.glsl set filetype=glsl
 au BufRead,BufNewFile *.go set filetype=go
 au BufRead,BufNewFile *.vert set filetype=glsl
 au BufRead,BufNewFile *.c2 setf c2
+au FileType gitcommit set wrap
+au FileType gitcommit set linebreak
+au FileType gitcommit set nolist
+au FileType markdown set wrap
+au FileType markdown set linebreak
+au FileType markdown set nolist
 
 "au BufNew,BufRead *.glsl setf glsl330
 "au BufNew,BufRead *.vert setf glsl330
@@ -50,9 +59,9 @@ au BufNewFile *.jg lua skeleton('jg')
 
 " Set custom tabstops for scripting languages
 au FileType css set shiftwidth=2 tabstop=2 softtabstop=2
-au FileType erb set shiftwidth=2 tabstop=2 softtabstop=2
+au FileType eruby set shiftwidth=2 tabstop=2 softtabstop=2
 au FileType html set shiftwidth=2 tabstop=2 softtabstop=2
-au FileType js set shiftwidth=2 tabstop=2 softtabstop=2
+au FileType javascript set shiftwidth=2 tabstop=2 softtabstop=2
 au FileType jsx set shiftwidth=2 tabstop=2 softtabstop=2
 au FileType lua set shiftwidth=2 tabstop=2 softtabstop=2
 au FileType ruby set shiftwidth=2 tabstop=2 softtabstop=2
@@ -107,5 +116,7 @@ noremap <Up> <Nop>
 
 " Remap ESC key
 inoremap jk <Esc>
+inoremap <Esc> <Nop>
 
 set wildignore+=*/.git/*,*/bundle/*,*/tmp/*,log/*
+set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
