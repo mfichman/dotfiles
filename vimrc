@@ -65,6 +65,8 @@ au FileType javascript set shiftwidth=2 tabstop=2 softtabstop=2
 au FileType jsx set shiftwidth=2 tabstop=2 softtabstop=2
 au FileType lua set shiftwidth=2 tabstop=2 softtabstop=2
 au FileType ruby set shiftwidth=2 tabstop=2 softtabstop=2
+au FileType c set shiftwidth=4 tabstop=4 softtabstop=4
+au FileType cpp set shiftwidth=4 tabstop=4 softtabstop=4
 
 " Disable annoying bells
 let g:netrw_silent = 1
