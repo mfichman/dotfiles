@@ -18,12 +18,14 @@ set nocompatible
 filetype off
 
 call plug#begin()
+Plug 'scrooloose/nerdtree'
 Plug 'chrisbra/csv.vim'
 Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-fugitive'
-Plug 'Glench/Vim-Jinja2-Syntax'
+" Plug 'Glench/Vim-Jinja2-Syntax'
 Plug 'https://github.com/kien/ctrlp.vim.git'
 Plug 'yegappan/greplace'
+"Plug 'lepture/vim-jinja'
 call plug#end()
 
 augroup mine
@@ -37,6 +39,9 @@ augroup mine
     au BufRead,BufNewFile *.go set filetype=go
     au BufRead,BufNewFile *.vert set filetype=glsl
     au BufRead,BufNewFile *.c2 setf c2
+    au BufRead,BufNewFile *.c.tmpl set filetype=c
+    au BufRead,BufNewFile *.h.tmpl set filetype=c
+    au BufRead,BufNewFile *.d.tmpl set filetype=text
     au FileType gitcommit set wrap
     au FileType gitcommit set linebreak
     au FileType gitcommit set nolist
@@ -134,5 +139,5 @@ noremap <Up> <Nop>
 inoremap jk <Esc>
 inoremap <Esc> <Nop>
 
-set wildignore+=*/.git/*,*/bundle/*,*/tmp/*,*/log/*,*/vendor/*,*/__pycache__/*,*/node_modules/*,*/public/*
+set wildignore+=*/.git/*,*/bundle/*,./tmp/*,*/log/*,*/vendor/*,*/__pycache__/*,*/node_modules/*,*/public/*
 set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
