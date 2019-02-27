@@ -4,6 +4,10 @@ set rtp+=~/.vim
 " CTRL-P options
 let g:ctrlp_follow_symlinks = 0
 let g:ctrlp_working_path_mode = 'a'
+let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
+if executable('ag')
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+endif
 
 " CSV options
 let g:csv_no_conceal = 1
@@ -18,6 +22,7 @@ set nocompatible
 filetype off
 
 call plug#begin()
+Plug 'joshdick/onedark.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'chrisbra/csv.vim'
 Plug 'vim-ruby/vim-ruby'
@@ -94,8 +99,8 @@ set vb t_vb=
 
 " Syntax highlighting
 syntax on
-colors github
-set background=light
+colors onedark
+set background=dark
 
 " Tabs/whitespace
 set expandtab
@@ -139,5 +144,5 @@ noremap <Up> <Nop>
 inoremap jk <Esc>
 inoremap <Esc> <Nop>
 
-set wildignore+=*/.git/*,*/bundle/*,./tmp/*,*/log/*,*/vendor/*,*/__pycache__/*,*/node_modules/*,*/public/*
+set wildignore+=*/.git/*,./tmp/*,./log/*,*/vendor/bundle/*,*/__pycache__/*,*/node_modules/*,*/public/*
 set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
