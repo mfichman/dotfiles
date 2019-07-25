@@ -30,6 +30,7 @@ Plug 'tpope/vim-fugitive'
 " Plug 'Glench/Vim-Jinja2-Syntax'
 Plug 'https://github.com/kien/ctrlp.vim.git'
 Plug 'yegappan/greplace'
+Plug 'keith/swift.vim'
 "Plug 'lepture/vim-jinja'
 call plug#end()
 
@@ -146,3 +147,6 @@ inoremap <Esc> <Nop>
 
 set wildignore+=*/.git/*,./tmp/*,./log/*,*/vendor/bundle/*,*/__pycache__/*,*/node_modules/*,*/public/*
 set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
+
+command Spin silent execute '!spin push' shellescape('%' . ':' . line('.'))
+command Rubocop execute '!rubocop' shellescape('%')

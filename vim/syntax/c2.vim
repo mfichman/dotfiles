@@ -1,51 +1,92 @@
 " Vim syntax file
-" Language: Apollo
+" Language: C2
 " Maintainer: Matt Fichman <matt.fichman@gmail.com>
 " Info: Yeeehaw!
 " URL: http://stanford.edu/~mfichman
 " Release Coordinator: Matt Fichman <matt.fichman@gmail.com>
 
-syn keyword apKeyword import export struct func const for return macro enum
+"syn keyword apType func return macro field in var
+"yn keyword apStructure struct enum
+syn keyword c2Keyword func return macro module
+syn keyword c2Keyword struct enum quote union
+syn keyword c2Type field var case
+syn keyword c2Type int char short long const static
+syn keyword c2Statement return
+syn keyword c2Conditional for return while for if elseif else break
+syn keyword c2Include import
+syn keyword c2Boolean true false
 
-syn keyword apTodo contained TODO FIXME XXX
+syn keyword c2Todo contained TODO FIXME XXX
 
-syn cluster apCommentGroup contains=apTodo
-syn region apComment start="#" end="$" contains=apTodo
+syn cluster c2CommentGroup contains=apTodo
 
-syn region apString start=+"+ end=+"+ 
-syn region apString start=+'+ end=+'+
+syn keyword c2Constant null
 
-syn keyword apConstant true false nil
+syn match c2String ":\@<!:[a-zA-Z_][a-zA-Z0-9_]*"
+syn match c2Type "\(field [a-zA-Z][a-zA-Z_0-9]* \)\@<=[a-zA-Z_][a-zA-Z0-9_]*"
+syn match c2Type "\(var [a-zA-Z][a-zA-Z_0-9]* \)\@<=[a-zA-Z_][a-zA-Z0-9_]*"
+syn match c2Type "\() \)\@<=[a-zA-Z_][a-zA-Z0-9_]*"
+syn match c2Type "\(: \**\)\@<=[a-zA-Z_][a-zA-Z0-9_]*"
+syn match c2Type "\(=> \**\)\@<=[a-zA-Z_][a-zA-Z0-9_]*"
+syn match c2Type "\(const \)\@<=[a-zA-Z_][a-zA-Z0-9_]*"
+syn match c2Type "\(static \)\@<=[a-zA-Z_][a-zA-Z0-9_]*"
+syn match c2Constant "#[a-zA-Z_][a-zA-Z0-9_]*"
 
-syn match apString ":\@<!:[a-zA-Z_][a-zA-Z0-9_]*"
-syn match apMacro "[a-zA-Z0-9_]*!(\@="
-syn match apType "\([a-zA-Z_0-9] \)\@<=[a-zA-Z_][a-zA-Z0-9_]*"
-syn match apType "\() \)\@<=[a-zA-Z_][a-zA-Z0-9_]*"
-syn match apFunction "\(import .*\)\@<=[a-zA-Z_][a-zA-Z0-9_]*"
-syn match apFunction "\(struct \)\@<=[a-zA-Z_][a-zA-Z0-9_]*"
-syn match apFunction "\(enum \)\@<=[a-zA-Z_][a-zA-Z0-9_]*"
-syn match apFunction "\(func \)\@<=[a-zA-Z_][a-zA-Z0-9_]*"
-syn match apFunction "\(macro \)\@<=[a-zA-Z_][a-zA-Z0-9_]*!"
-syn match apConstant "[A-Z][A-Z0-9_]*[a-z]\@!"
-syn match apString "[a-zA-Z0-9_]\@<!\/.*\/"
+"syn match c2Function "\(import .*\)\@<=[\*a-zA-Z_][\*a-zA-Z0-9_]*"
+"syn match c2Function "\(struct \)\@<=[\*a-zA-Z_][\*a-zA-Z0-9_]*"
+"syn match c2Function "\(enum \)\@<=[\*a-zA-Z_][\*a-zA-Z0-9_]*"
+"syn match c2Function "\(func \)\@<=[\*a-zA-Z_][\*a-zA-Z0-9_]*"
+"syn match c2Function "\(macro \)\@<=[\*a-zA-Z_][\*a-zA-Z0-9_]*"
 
-syn keyword apOperator + - / * <> == != ^ ? := > < <= >=
+syn keyword c2Operator + - / * <> == != ^ ? := > < <= >=
+syn match c2Operator "=>"
+syn match c2Operator "||"
+syn match c2Operator "&&"
+syn match c2Operator "="
+syn match c2Operator "<<"
+syn match c2Operator ">>"
+syn match c2Operator "!"
+syn match c2Operator "+"
+syn match c2Operator "=>"
+syn match c2Operator "\*"
+syn match c2Operator "%"
+syn match c2Operator "\/\/@!"
+syn match c2Operator "\^"
+syn match c2Operator ","
+syn match c2Operator "&"
+syn match c2Operator "<"
+syn match c2Operator ">"
+syn match c2Operator "=="
+syn match none "->"
+syn match c2Operator ":"
+syn match c2Operator "?"
+syn match none "::"
 
-syn match apNumber "\<[0-9][0-9]*\>"
-syn match apNumber "\<0x[0-9A-Fa-f][0-9A-Fa-f]*\>"
+syn match c2Number "\<[0-9][0-9]*\>"
+syn match c2Number "\<0x[0-9A-Fa-f][0-9A-Fa-f]*\>"
 
-hi def link apKeyword Keyword
-hi def link apMacro Keyword
-hi def link apTodo Todo
-hi def link apComment Comment
-hi def link apString String
-hi def link apConstant Constant
-hi def link apNumber Number
-hi def link apFunction Function
-hi def link apType Type
-hi def link apOperator Operator
-hi def link apSymbol Constant
-hi def link apRegex String
+syn region c2String start=+"+ end=+"+ skip=+\\"+
+syn region c2String start=+'+ end=+'+ skip=+\\'+
+
+syn region c2Comment start="//" end="$"
+syn region c2Comment start="/\*" end="\*/"
+
+hi def link c2Keyword Keyword
+hi def link c2Todo Todo
+hi def link c2Comment Comment
+hi def link c2String String
+hi def link c2Constant Constant
+hi def link c2Number Number
+hi def link c2Function Function
+hi def link c2Type Type
+hi def link c2Operator Operator
+hi def link c2Symbol Constant
+hi def link c2Regex String
+hi def link c2Structure Structure
+hi def link c2Conditional Conditional
+hi def link c2Include Include
+hi def link c2Boolean Boolean
+hi def link c2Operator Operator
 
 let b:current_syntax = "c2"
 

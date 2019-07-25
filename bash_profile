@@ -23,6 +23,9 @@ export EDITOR="/usr/local/bin/gvim -f"
 export PATH="$(pyenv root)/shims:/usr/local/sbin:$PATH"
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
+# Path for flutter
+export PATH="$PATH:~/code/flutter/bin"
+
 # Ruby
 export PATH="$PATH:$HOME/.rvm/bin"
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*

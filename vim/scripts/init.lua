@@ -3,7 +3,7 @@
 local io = require('io')
 local os = require('os')
 
--- Search backwards to find the .skeleton file for the project. If no 
+-- Search backwards to find the .skeleton file for the project. If no
 -- skeleton is found, then use the default one from .vim
 local function findSkeletonFile(ext)
   local file = vim.buffer().fname
@@ -13,7 +13,7 @@ local function findSkeletonFile(ext)
     local path = dir..'/.skeleton.'..ext
     local fd = io.open(path)
     if fd then
-      fd.close()
+      fd:close()
       return path
     else
       dir = dir:match('(.+)/.-$')
@@ -26,7 +26,7 @@ end
 function skeleton(ext)
   local path = findSkeletonFile(ext)
   local buffer = vim.buffer()
-  local fd = io.open(path) 
+  local fd = io.open(path)
   local date = os.date('*t')
   for line in fd:lines() do
     local line = line:gsub('%%year', date.year)
