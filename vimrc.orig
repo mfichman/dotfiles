@@ -13,6 +13,7 @@ endif
 let g:csv_no_conceal = 1
 let g:csv_no_column_highlight = 1
 
+
 " Set up Lua
 luafile ~/.vim/scripts/init.lua
 
@@ -28,8 +29,8 @@ Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-fugitive'
 " Plug 'Glench/Vim-Jinja2-Syntax'
 Plug 'https://github.com/kien/ctrlp.vim.git'
+<<<<<<< Updated upstream
 Plug 'yegappan/greplace'
-Plug 'keith/swift.vim'
 "Plug 'lepture/vim-jinja'
 call plug#end()
 
@@ -92,10 +93,53 @@ augroup mine
     " Strip trailing whitespace on save
     au BufWritePre * :%s/\s\+$//e
 augroup END
+=======
+Plug 'tpope/vim-fugitive'
+call plug#end()
 
-" Open NERDTree by default
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+" Filetype handling
+au BufRead,BufNewFile *.ll setf lex
+au BufRead,BufNewFile *.c2 set filetype=c2
+au BufRead,BufNewFile *.c3 set filetype=c3
+au BufRead,BufNewFile *.frag set filetype=glsl
+au BufRead,BufNewFile *.geom set filetype=glsl
+au BufRead,BufNewFile *.glsl set filetype=glsl
+au BufRead,BufNewFile *.go set filetype=go
+au BufRead,BufNewFile *.vert set filetype=glsl
+au BufRead,BufNewFile *.c2 setf c2
+au BufRead,BufNewFile *.c.j2 setf c
+au BufRead,BufNewFile *.h.j2 setf c
+
+"au BufNew,BufRead *.glsl setf glsl330
+"au BufNew,BufRead *.vert setf glsl330
+"au BufNew,BufRead *.frag setf glsl330
+"au BufNew,BufRead *.geom setf glsl330
+
+" Fix lua comment formatting
+au BufRead,BufNewFile *.lua setlocal cms=--%s com=s:--[[,m:\ ,e:]],:--
+
+" Templates for various filetypes
+au BufNewFile *.c lua skeleton('c')
+au BufNewFile *.cfg lua skeleton('cfg')
+au BufNewFile *.cpp lua skeleton('cpp')
+au BufNewFile *.frag lua skeleton('glsl')
+au BufNewFile *.geom lua skeleton('glsl')
+au BufNewFile *.glsl lua skeleton('glsl')
+au BufNewFile *.h lua skeleton('h')
+au BufNewFile *.lua lua skeleton('lua')
+au BufNewFile *.py lua skeleton('py')
+au BufNewFile *.vert lua skeleton('glsl')
+au BufNewFile *.jg lua skeleton('jg')
+
+" Set custom tabstops for scripting languages
+au FileType css set shiftwidth=2 tabstop=2 softtabstop=2
+au FileType erb set shiftwidth=2 tabstop=2 softtabstop=2
+au FileType html set shiftwidth=2 tabstop=2 softtabstop=2
+au FileType js set shiftwidth=2 tabstop=2 softtabstop=2
+au FileType jsx set shiftwidth=2 tabstop=2 softtabstop=2
+au FileType lua set shiftwidth=2 tabstop=2 softtabstop=2
+au FileType ruby set shiftwidth=2 tabstop=2 softtabstop=2
+>>>>>>> Stashed changes
 
 " Disable annoying bells
 let g:netrw_silent = 1
@@ -103,9 +147,8 @@ set vb t_vb=
 
 " Syntax highlighting
 syntax on
-"colors onedark
-colors github
-"set background=dark
+colors onedark
+set background=dark
 
 " Tabs/whitespace
 set expandtab
@@ -151,6 +194,3 @@ inoremap <Esc> <Nop>
 
 set wildignore+=*/.git/*,./tmp/*,./log/*,*/vendor/bundle/*,*/__pycache__/*,*/node_modules/*,*/public/*
 set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
-
-command Spin silent execute '!spin push' shellescape('%' . ':' . line('.'))
-command Rubocop execute '!rubocop' shellescape('%')
