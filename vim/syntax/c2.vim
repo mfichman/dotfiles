@@ -9,6 +9,7 @@
 "yn keyword apStructure struct enum
 syn keyword c2Keyword func return macro module
 syn keyword c2Keyword struct enum quote union
+"init new
 syn keyword c2Type field var case
 syn keyword c2Type int char short long const static
 syn keyword c2Statement return
@@ -22,23 +23,21 @@ syn cluster c2CommentGroup contains=apTodo
 
 syn keyword c2Constant null
 
-syn match c2String ":\@<!:[a-zA-Z_][a-zA-Z0-9_]*"
 syn match c2Type "\(field [a-zA-Z][a-zA-Z_0-9]* \)\@<=[a-zA-Z_][a-zA-Z0-9_]*"
 syn match c2Type "\(var [a-zA-Z][a-zA-Z_0-9]* \)\@<=[a-zA-Z_][a-zA-Z0-9_]*"
 syn match c2Type "\() \)\@<=[a-zA-Z_][a-zA-Z0-9_]*"
-syn match c2Type "\(: \**\)\@<=[a-zA-Z_][a-zA-Z0-9_]*"
+syn match c2Type "\(:\s\s*\**\)\@<=[a-zA-Z_][a-zA-Z0-9_.]*" contains=c2Resolution
 syn match c2Type "\(=> \**\)\@<=[a-zA-Z_][a-zA-Z0-9_]*"
 syn match c2Type "\(const \)\@<=[a-zA-Z_][a-zA-Z0-9_]*"
 syn match c2Type "\(static \)\@<=[a-zA-Z_][a-zA-Z0-9_]*"
 syn match c2Constant "#[a-zA-Z_][a-zA-Z0-9_]*"
-
-"syn match c2Function "\(import .*\)\@<=[\*a-zA-Z_][\*a-zA-Z0-9_]*"
-"syn match c2Function "\(struct \)\@<=[\*a-zA-Z_][\*a-zA-Z0-9_]*"
-"syn match c2Function "\(enum \)\@<=[\*a-zA-Z_][\*a-zA-Z0-9_]*"
-"syn match c2Function "\(func \)\@<=[\*a-zA-Z_][\*a-zA-Z0-9_]*"
-"syn match c2Function "\(macro \)\@<=[\*a-zA-Z_][\*a-zA-Z0-9_]*"
+syn match c2Constant "@[a-zA-Z_][a-zA-Z0-9_]*"
+syn region c2Parens start=+(+ end=+)+ contains=ALL
+syn region c2Constant start=+#(+ end=+)+ contains=ALL keepend
+syn match c2Import "\(import \)\@<=[a-zA-Z_][a-zA-Z0-9_:]*"
 
 syn keyword c2Operator + - / * <> == != ^ ? := > < <= >=
+syn match c2Resolution "\."
 syn match c2Operator "=>"
 syn match c2Operator "||"
 syn match c2Operator "&&"
@@ -65,8 +64,8 @@ syn match none "::"
 syn match c2Number "\<[0-9][0-9]*\>"
 syn match c2Number "\<0x[0-9A-Fa-f][0-9A-Fa-f]*\>"
 
-syn region c2String start=+"+ end=+"+ skip=+\\"+
-syn region c2String start=+'+ end=+'+ skip=+\\'+
+syn region c2String start=+"+ end=+"+ skip=+\\"\|\\\\+
+syn region c2String start=+'+ end=+'+ skip=+\\'\|\\\\+
 
 syn region c2Comment start="//" end="$"
 syn region c2Comment start="/\*" end="\*/"

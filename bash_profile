@@ -32,3 +32,7 @@ export PATH="$PATH:$HOME/.rvm/bin"
 
 alias less='less -R'
 
+
+export PATH="$HOME/.cargo/bin:$PATH"
+
+export OVERCOMMIT_DISABLE=1

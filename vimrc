@@ -3,11 +3,13 @@ set rtp+=~/.vim
 
 " CTRL-P options
 let g:ctrlp_follow_symlinks = 0
+let g:ctrlp_max_files=0
 let g:ctrlp_working_path_mode = 'a'
 let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
-if executable('ag')
-  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-endif
+let g:ctrlp_user_command = 'git ls-files %s'
+
+" OneDark options
+let g:onedark_terminal_italics = 1
 
 " CSV options
 let g:csv_no_conceal = 1
@@ -15,7 +17,7 @@ let g:csv_no_column_highlight = 1
 
 
 " Set up Lua
-luafile ~/.vim/scripts/init.lua
+"luafile ~/.vim/scripts/init.lua
 
 " Packages and package settings
 set nocompatible
@@ -31,6 +33,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'https://github.com/kien/ctrlp.vim.git'
 Plug 'yegappan/greplace'
 Plug 'keith/swift.vim'
+Plug 'othree/yajs.vim'
 "Plug 'lepture/vim-jinja'
 call plug#end()
 
@@ -48,6 +51,9 @@ augroup mine
     au BufRead,BufNewFile *.c.tmpl set filetype=c
     au BufRead,BufNewFile *.h.tmpl set filetype=c
     au BufRead,BufNewFile *.d.tmpl set filetype=text
+    au BufRead,BufNewFile *.csv.erb set filetype=eruby.csv
+    au BufRead,BufNewFile *.json.erb set filetype=eruby.json
+    au BufRead,BufNewFile *.amp.erb set filetype=eruby.html
     au FileType gitcommit set wrap
     au FileType gitcommit set linebreak
     au FileType gitcommit set nolist
@@ -121,6 +127,7 @@ set ruler
 if has("win32")
     set guifont=consolas:h10:cDEFAULT
 endif
+set guifont=Operator\ Mono\ Light:h13
 
 " Code folding
 "set foldmethod=syntax
@@ -145,8 +152,8 @@ noremap <Up> <Nop>
 inoremap jk <Esc>
 inoremap <Esc> <Nop>
 
-set wildignore+=*/.git/*,./tmp/*,./log/*,*/vendor/bundle/*,*/__pycache__/*,*/node_modules/*,*/public/*
+set wildignore+=*/.git/*,./tmp/*,./log/*,*/vendor/bundle/*,*/__pycache__/*,*/node_modules/*,*/public/*,*/spec/fixtures/*
 set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 
-command Spin silent execute '!spin push' shellescape('%' . ':' . line('.'))
-command Rubocop execute '!rubocop' shellescape('%')
+command Spin silent execute '!spin push' shellescape(expand('%') . ':' . line('.'))
+command Rubocop execute '!rubocop' shellescape(expand('%'))
