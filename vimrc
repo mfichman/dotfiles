@@ -6,7 +6,8 @@ let g:ctrlp_follow_symlinks = 0
 let g:ctrlp_max_files=0
 let g:ctrlp_working_path_mode = 'a'
 let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
-let g:ctrlp_user_command = 'git ls-files %s'
+let g:ctrlp_user_command = ['.git', 'git ls-files --cached --others --exclude-standard %s']
+let g:ctrlp_path_nolim = 1
 
 " OneDark options
 let g:onedark_terminal_italics = 1
@@ -16,7 +17,7 @@ let g:csv_no_conceal = 1
 let g:csv_no_column_highlight = 1
 
 " Set up Lua
-"luafile ~/.vim/scripts/init.lua
+luafile ~/.vim/scripts/init.lua
 
 " Packages and package settings
 set nocompatible
@@ -28,12 +29,10 @@ Plug 'scrooloose/nerdtree'
 Plug 'chrisbra/csv.vim'
 Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-fugitive'
-" Plug 'Glench/Vim-Jinja2-Syntax'
 Plug 'https://github.com/kien/ctrlp.vim.git'
 Plug 'yegappan/greplace'
 Plug 'keith/swift.vim'
 Plug 'othree/yajs.vim'
-"Plug 'lepture/vim-jinja'
 call plug#end()
 
 augroup mine
@@ -129,9 +128,12 @@ set nowrap
 set number
 set ruler
 if has("win32")
-    set guifont=consolas:h10:cDEFAULT
+    set guifont=Consolas:h10
+    set rop=type:directx,geom:1,renmode:0,taamode:0
+    "set guifont=Operator\ Mono\ Light:h9
+else
+    set guifont=Operator\ Mono\ Light:h13
 endif
-set guifont=Operator\ Mono\ Light:h13
 
 " Code folding
 "set foldmethod=syntax
