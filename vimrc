@@ -26,7 +26,7 @@ Plug 'scrooloose/nerdtree'
 Plug 'chrisbra/csv.vim'
 Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-fugitive'
-Plug 'https://github.com/kien/ctrlp.vim.git'
+Plug 'https://github.com/ctrlpvim/ctrlp.vim.git'
 Plug 'yegappan/greplace'
 Plug 'keith/swift.vim'
 Plug 'othree/yajs.vim'
@@ -49,17 +49,13 @@ augroup mine
     au BufRead,BufNewFile *.csv.erb set filetype=eruby.csv
     au BufRead,BufNewFile *.json.erb set filetype=eruby.json
     au BufRead,BufNewFile *.amp.erb set filetype=eruby.html
+
     au FileType gitcommit set wrap
     au FileType gitcommit set linebreak
     au FileType gitcommit set nolist
     au FileType markdown set wrap
     au FileType markdown set linebreak
     au FileType markdown set nolist
-
-    "au BufNew,BufRead *.glsl setf glsl330
-    "au BufNew,BufRead *.vert setf glsl330
-    "au BufNew,BufRead *.frag setf glsl330
-    "au BufNew,BufRead *.geom setf glsl330
 
     " Fix lua comment formatting
     au BufRead,BufNewFile *.lua setlocal cms=--%s com=s:--[[,m:\ ,e:]],:--
@@ -77,8 +73,6 @@ augroup mine
     au BufNewFile *.vert lua skeleton('glsl')
     au BufNewFile *.jg lua skeleton('jg')
 
-    "au BufWritePost * silent! execute '!git add % || true > /dev/null'
-
     " Set custom tabstops for scripting languages
     au FileType css set shiftwidth=2 tabstop=2 softtabstop=2
     au FileType eruby set shiftwidth=2 tabstop=2 softtabstop=2
@@ -93,11 +87,13 @@ augroup mine
 
     " Strip trailing whitespace on save
     au BufWritePre * :%s/\s\+$//e
-augroup END
+augroup end
 
 " Open NERDTree by default
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+if exists('loaded_nerd_tree')
+  autocmd StdinReadPre * let s:std_in=1
+  autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+end
 
 " Disable annoying bells
 let g:netrw_silent = 1
@@ -124,12 +120,13 @@ set nobomb
 set nowrap
 set number
 set ruler
+
+" Font/rendering settings
 if has("win32")
-    set guifont=Consolas:h10
-    set rop=type:directx,geom:1,renmode:0,taamode:0
-    "set guifont=Operator\ Mono\ Light:h9
+  set rop=type:directx,geom:1,renmode:0,taamode:0
+  set guifont=Consolas:h10
 else
-    set guifont=Operator\ Mono\ Light:h13
+  set guifont=Operator\ Mono\ Light:h13
 endif
 
 " Code folding
@@ -156,7 +153,10 @@ inoremap jk <Esc>
 inoremap <Esc> <Nop>
 
 set wildignore+=*/.git/*,./tmp/*,./log/*,*/vendor/bundle/*,*/__pycache__/*,*/node_modules/*,*/public/*,*/spec/fixtures/*
-set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
+
+if exists('g:loaded_fugitive')
+  set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
+endif
 
 command Spin silent execute '!spin push' shellescape(expand('%') . ':' . line('.'))
 command Rubocop execute '!rubocop' shellescape(expand('%'))
