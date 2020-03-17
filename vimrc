@@ -1,6 +1,10 @@
 " Fix RTP for Windows
 set rtp+=~/.vim
 
+if has("unix")
+  set luadll=/usr/local/lib/liblua5.3.dylib
+endif
+
 " CTRL-P options
 let g:ctrlp_follow_symlinks = 0
 let g:ctrlp_max_files=0
@@ -101,9 +105,11 @@ set vb t_vb=
 
 " Syntax highlighting
 syntax on
-"colors onedark
-colors github
-"set background=dark
+if has("win32")
+  colors github
+else
+  colors onedark
+endif
 
 " Tabs/whitespace
 set expandtab
