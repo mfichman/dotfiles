@@ -20,10 +20,7 @@ let g:csv_no_column_highlight = 1
 luafile ~/.vim/scripts/init.lua
 
 " Packages and package settings
-set nocompatible
-filetype off
-
-call plug#begin()
+call plug#begin('~/.vim/plugged')
 Plug 'joshdick/onedark.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'chrisbra/csv.vim'
