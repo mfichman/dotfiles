@@ -34,6 +34,7 @@ Plug 'https://github.com/ctrlpvim/ctrlp.vim.git'
 Plug 'yegappan/greplace'
 Plug 'keith/swift.vim'
 Plug 'othree/yajs.vim'
+Plug 'ngmy/vim-rubocop'
 call plug#end()
 
 augroup mine
@@ -41,6 +42,7 @@ augroup mine
     " Filetype handling
     au BufRead,BufNewFile *.ll setf lex
     au BufRead,BufNewFile *.c2 set filetype=c2
+    au BufRead,BufNewFile *.c3 set filetype=c3
     au BufRead,BufNewFile *.frag set filetype=glsl
     au BufRead,BufNewFile *.geom set filetype=glsl
     au BufRead,BufNewFile *.glsl set filetype=glsl
@@ -79,6 +81,8 @@ augroup mine
 
     " Set custom tabstops for scripting languages
     au FileType css set shiftwidth=2 tabstop=2 softtabstop=2
+    au FileType hs set shiftwidth=2 tabstop=2 softtabstop=2
+    au FileType haskell set shiftwidth=2 tabstop=2 softtabstop=2
     au FileType eruby set shiftwidth=2 tabstop=2 softtabstop=2
     au FileType html set shiftwidth=2 tabstop=2 softtabstop=2
     au FileType javascript set shiftwidth=2 tabstop=2 softtabstop=2
@@ -107,8 +111,10 @@ set vb t_vb=
 syntax on
 if has("win32")
   colors github
-else
+elseif system("defaults read -g AppleInterfaceStyle") =~ '^Dark'
   colors onedark
+else
+  colors github
 endif
 
 " Tabs/whitespace

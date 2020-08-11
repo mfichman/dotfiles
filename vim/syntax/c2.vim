@@ -23,6 +23,10 @@ syn cluster c2CommentGroup contains=apTodo
 
 syn keyword c2Constant null
 
+"syn match c2Function "\(func\)\@<=\s*[a-zA-Z_][a-zA-Z0-9_]*"
+"syn match c2Function "\(module\)\@<=\s*[a-zA-Z_][a-zA-Z0-9_]*"
+"syn match c2Function "\(macro\)\@<=\s*[a-zA-Z_][a-zA-Z0-9_]*"
+"syn match c2Function "\(struct\)\@<=\s*[a-zA-Z_][a-zA-Z0-9_]*"
 syn match c2Type "\(field [a-zA-Z][a-zA-Z_0-9]* \)\@<=[a-zA-Z_][a-zA-Z0-9_]*"
 syn match c2Type "\(var [a-zA-Z][a-zA-Z_0-9]* \)\@<=[a-zA-Z_][a-zA-Z0-9_]*"
 syn match c2Type "\() \)\@<=[a-zA-Z_][a-zA-Z0-9_]*"
@@ -86,6 +90,7 @@ hi def link c2Conditional Conditional
 hi def link c2Include Include
 hi def link c2Boolean Boolean
 hi def link c2Operator Operator
+hi def link c2Define Define
 
 let b:current_syntax = "c2"
 
