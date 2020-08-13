@@ -1,0 +1,8 @@
+[diff]
+	tool = gvimdiff
+[merge]
+	tool = gvimdiff
+[push]
+	default = current
+[core]
+	excludesfile = /Users/matt/.gitignore
