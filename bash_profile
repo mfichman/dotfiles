@@ -36,3 +36,5 @@ alias less='less -R'
 export PATH="$HOME/.cargo/bin:$PATH"
 
 #export OVERCOMMIT_DISABLE=1
+
+eval "$(pyenv init -)"

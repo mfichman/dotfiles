@@ -13,6 +13,9 @@ let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
 let g:ctrlp_user_command = ['.git', 'git ls-files --cached --others --exclude-standard %s']
 let g:ctrlp_path_nolim = 1
 
+" Zig options
+let g:zig_fmt_autosave = 0
+
 " OneDark options
 let g:onedark_terminal_italics = 1
 
@@ -35,6 +38,8 @@ Plug 'yegappan/greplace'
 Plug 'keith/swift.vim'
 Plug 'othree/yajs.vim'
 Plug 'ngmy/vim-rubocop'
+Plug 'ziglang/zig.vim'
+Plug 'gf3/peg.vim'
 call plug#end()
 
 augroup mine
@@ -55,6 +60,7 @@ augroup mine
     au BufRead,BufNewFile *.csv.erb set filetype=eruby.csv
     au BufRead,BufNewFile *.json.erb set filetype=eruby.json
     au BufRead,BufNewFile *.amp.erb set filetype=eruby.html
+    au BufRead,BufNewFile *.pdf.prawn set filetype=ruby
 
     au FileType gitcommit set wrap
     au FileType gitcommit set linebreak
@@ -138,7 +144,8 @@ if has("win32")
   set rop=type:directx,geom:1,renmode:0,taamode:0
   set guifont=Consolas:h10
 else
-  set guifont=Operator\ Mono\ Light:h13
+  "set guifont=Operator\ Mono\ Light:h13
+  set guifont=Inconsolata:h13
 endif
 
 " Code folding
