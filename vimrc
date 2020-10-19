@@ -33,13 +33,16 @@ Plug 'scrooloose/nerdtree'
 Plug 'chrisbra/csv.vim'
 Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-fugitive'
-Plug 'https://github.com/ctrlpvim/ctrlp.vim.git'
+Plug 'https://github.com/kien/ctrlp.vim.git'
 Plug 'yegappan/greplace'
 Plug 'keith/swift.vim'
 Plug 'othree/yajs.vim'
 Plug 'ngmy/vim-rubocop'
 Plug 'ziglang/zig.vim'
 Plug 'gf3/peg.vim'
+"Plug 'dense-analysis/ale'
+Plug 'prabirshrestha/vim-lsp'
+Plug 'mattn/vim-lsp-settings'
 call plug#end()
 
 augroup mine
@@ -54,6 +57,7 @@ augroup mine
     au BufRead,BufNewFile *.go set filetype=go
     au BufRead,BufNewFile *.vert set filetype=glsl
     au BufRead,BufNewFile *.c2 setf c2
+    au BufRead,BufNewFile *.h set filetype=c
     au BufRead,BufNewFile *.c.tmpl set filetype=c
     au BufRead,BufNewFile *.h.tmpl set filetype=c
     au BufRead,BufNewFile *.d.tmpl set filetype=text
@@ -104,10 +108,7 @@ augroup mine
 augroup end
 
 " Open NERDTree by default
-if exists('loaded_nerd_tree')
-  autocmd StdinReadPre * let s:std_in=1
-  autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-end
+autocmd VimEnter * NERDTree
 
 " Disable annoying bells
 let g:netrw_silent = 1
@@ -171,11 +172,11 @@ noremap <Up> <Nop>
 inoremap jk <Esc>
 inoremap <Esc> <Nop>
 
+"nmap <leader>d <Plug>(ale_go_to_definition)
+nmap <leader>d :LspDefinition<cr>
+
 set wildignore+=*/.git/*,./tmp/*,./log/*,*/vendor/bundle/*,*/__pycache__/*,*/node_modules/*,*/public/*,*/spec/fixtures/*
 
 if exists('g:loaded_fugitive')
   set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 endif
-
-command Spin silent execute '!spin push' shellescape(expand('%') . ':' . line('.'))
-command Rubocop execute '!rubocop' shellescape(expand('%'))
