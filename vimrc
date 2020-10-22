@@ -1,23 +1,8 @@
 " Fix RTP for Windows
 set rtp+=~/.vim
 
-if has("unix")
-  set luadll=/usr/local/lib/liblua5.3.dylib
-endif
-
-" CTRL-P options
-let g:ctrlp_follow_symlinks = 0
-let g:ctrlp_max_files=0
-let g:ctrlp_working_path_mode = 'a'
-let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
-let g:ctrlp_user_command = ['.git', 'git ls-files --cached --others --exclude-standard %s']
-let g:ctrlp_path_nolim = 1
-
-" Zig options
-let g:zig_fmt_autosave = 0
-
 " OneDark options
-let g:onedark_terminal_italics = 1
+let g:onedark_terminal_italics = 0
 
 " CSV options
 let g:csv_no_conceal = 1
@@ -33,16 +18,16 @@ Plug 'scrooloose/nerdtree'
 Plug 'chrisbra/csv.vim'
 Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-fugitive'
-Plug 'https://github.com/kien/ctrlp.vim.git'
+Plug 'junegunn/fzf.vim'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'yegappan/greplace'
 Plug 'keith/swift.vim'
 Plug 'othree/yajs.vim'
 Plug 'ngmy/vim-rubocop'
-Plug 'ziglang/zig.vim'
-Plug 'gf3/peg.vim'
-"Plug 'dense-analysis/ale'
-Plug 'prabirshrestha/vim-lsp'
-Plug 'mattn/vim-lsp-settings'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'dense-analysis/ale'
 call plug#end()
 
 augroup mine
@@ -117,10 +102,13 @@ set vb t_vb=
 " Syntax highlighting
 syntax on
 if has("win32")
+  let g:airline_theme = 'base16'
   colors github
 elseif system("defaults read -g AppleInterfaceStyle") =~ '^Dark'
+  let g:airline_theme = 'onedark'
   colors onedark
 else
+  let g:airline_theme = 'base16'
   colors github
 endif
 
@@ -146,7 +134,7 @@ if has("win32")
   set guifont=Consolas:h10
 else
   "set guifont=Operator\ Mono\ Light:h13
-  set guifont=Inconsolata:h13
+  set guifont=Inconsolata\ for\ Powerline:h15
 endif
 
 " Code folding
@@ -172,11 +160,10 @@ noremap <Up> <Nop>
 inoremap jk <Esc>
 inoremap <Esc> <Nop>
 
-"nmap <leader>d <Plug>(ale_go_to_definition)
-nmap <leader>d :LspDefinition<cr>
+" Map search function
+nnoremap <silent> <C-p> :Fgl<CR>
 
-set wildignore+=*/.git/*,./tmp/*,./log/*,*/vendor/bundle/*,*/__pycache__/*,*/node_modules/*,*/public/*,*/spec/fixtures/*
-
-if exists('g:loaded_fugitive')
-  set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
-endif
+source ~/.vim/coc.vim
+source ~/.vim/ale.vim
+source ~/.vim/fzf.vim
+source ~/.vim/airline.vim
