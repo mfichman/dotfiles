@@ -94,6 +94,7 @@ augroup end
 
 " Open NERDTree by default
 autocmd VimEnter * NERDTree
+autocmd VimEnter * wincmd w
 
 " Disable annoying bells
 let g:netrw_silent = 1
@@ -164,6 +165,6 @@ inoremap <Esc> <Nop>
 nnoremap <silent> <C-p> :Fgl<CR>
 
 source ~/.vim/coc.vim
-source ~/.vim/ale.vim
 source ~/.vim/fzf.vim
 source ~/.vim/airline.vim
+source ~/.vim/ale.vim
