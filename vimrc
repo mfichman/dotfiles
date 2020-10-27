@@ -18,7 +18,6 @@ Plug 'scrooloose/nerdtree'
 Plug 'chrisbra/csv.vim'
 Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-fugitive'
-Plug 'junegunn/fzf.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'yegappan/greplace'
 Plug 'keith/swift.vim'
@@ -164,7 +163,11 @@ inoremap <Esc> <Nop>
 " Map search function
 nnoremap <silent> <C-p> :Fgl<CR>
 
-source ~/.vim/coc.vim
-source ~/.vim/fzf.vim
 source ~/.vim/airline.vim
 source ~/.vim/ale.vim
+source ~/.vim/coc.vim
+source ~/.vim/fzf.vim
+
+scriptencoding utf-8
+set encoding=utf-8
+setglobal fileencoding=utf-8
