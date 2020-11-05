@@ -131,8 +131,10 @@ set ruler
 
 " Font/rendering settings
 if has("win32")
-  set rop=type:directx,geom:1,renmode:0,taamode:0
-  set guifont=Consolas:h10
+  "set rop=type:directx,geom:1,renmode:0,taamode:0
+  "set guifont=Consolas:h11
+  set guifont=Consolas\ NF:h11
+  "set guifont=Inconsolata\ for\ Powerline:h15
 else
   "set guifont=Operator\ Mono\ Light:h13
   set guifont=Inconsolata\ for\ Powerline:h15
