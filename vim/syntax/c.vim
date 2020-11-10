@@ -9,7 +9,7 @@ if exists("b:current_syntax")
 endif
 
 " A bunch of useful C keywords
-syn keyword	cStatement	goto break return continue asm
+syn keyword	cStatement	goto break return continue asm export
 syn keyword	cLabel		case default
 syn keyword	cConditional	if else switch
 syn keyword	cRepeat		while for do

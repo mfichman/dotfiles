@@ -1,5 +1,5 @@
 " Fix RTP for Windows
-set rtp+=~/.vim
+set rtp^=~/.vim
 
 " OneDark options
 let g:onedark_terminal_italics = 0
@@ -150,21 +150,21 @@ endif
 filetype plugin indent on
 
 " Key mappings
-inoremap <Down> <Nop>
-inoremap <Left> <Nop>
-inoremap <Right> <Nop>
-inoremap <Up> <Nop>
-noremap <Down> <Nop>
-noremap <Left> <Nop>
-noremap <Right> <Nop>
-noremap <Up> <Nop>
+inoremap <down> <nop>
+inoremap <left> <nop>
+inoremap <right> <nop>
+inoremap <up> <nop>
+noremap <down> <nop>
+noremap <left> <nop>
+noremap <right> <nop>
+noremap <up> <nop>
 
 " Remap ESC key
-inoremap jk <Esc>
-inoremap <Esc> <Nop>
+inoremap jk <esc>
+inoremap <esc> <nop>
 
 " Map search function
-nnoremap <silent> <C-p> :Fgl<CR>
+nnoremap <silent> <c-p> :Fgl<cr>
 
 source ~/.vim/airline.vim
 source ~/.vim/ale.vim
@@ -174,3 +174,5 @@ source ~/.vim/fzf.vim
 scriptencoding utf-8
 set encoding=utf-8
 setglobal fileencoding=utf-8
+
+nnoremap <silent> <leader>t :terminal python tool/test %<cr><c-w>j
