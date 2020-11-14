@@ -9,3 +9,5 @@
 [user]
 	name = Matt Fichman
 	email = matt.fichman@gmail.com
+[rebase]
+	instructionFOrmat = (%an %ae) %s
