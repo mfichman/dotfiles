@@ -95,6 +95,7 @@ augroup end
 " Open NERDTree by default
 autocmd VimEnter * NERDTree
 autocmd VimEnter * wincmd w
+let NERDTreeHighlightCursorline = 0
 
 " Disable annoying bells
 let g:netrw_silent = 1
@@ -137,7 +138,9 @@ if has("win32")
   "set guifont=Inconsolata\ for\ Powerline:h15
 else
   "set guifont=Operator\ Mono\ Light:h13
-  set guifont=Inconsolata\ for\ Powerline:h15
+  "set guifont=Inconsolata-dz\ for\ Powerline:h13
+  "set linespace=-3 " Adjust for broken Inconsolata-dz font ^^^
+  set guifont=Source\ Code\ Pro\ for\ Powerline:h13
 endif
 
 " Code folding
@@ -166,6 +169,13 @@ inoremap <esc> <nop>
 " Map search function
 nnoremap <silent> <c-p> :Fgl<cr>
 
+" Map terminal commands
+nnoremap <silent> <leader>tf :call RunTestFile()<cr>
+nnoremap <silent> <leader>tt :call RunTestTest()<cr>
+nnoremap <silent> <leader>tc :call RunTypeCheck()<cr>
+nnoremap <silent> <leader>f :ALEFix<cr>
+nnoremap <silent> <leader>t :terminal python tool/test %<cr><c-w>j
+
 source ~/.vim/airline.vim
 source ~/.vim/ale.vim
 source ~/.vim/coc.vim
@@ -175,4 +185,4 @@ scriptencoding utf-8
 set encoding=utf-8
 setglobal fileencoding=utf-8
 
-nnoremap <silent> <leader>t :terminal python tool/test %<cr><c-w>j
+let NERDTreeHighlightCursorline = 0
