@@ -132,15 +132,10 @@ set ruler
 
 " Font/rendering settings
 if has("win32")
-  "set rop=type:directx,geom:1,renmode:0,taamode:0
-  "set guifont=Consolas:h11
-  set guifont=Consolas\ NF:h11
-  "set guifont=Inconsolata\ for\ Powerline:h15
+  set rop=type:directx,geom:1,renmode:0,taamode:0
+  set guifont=Source\ Code\ Pro\ for\ Powerline:h10
 else
-  "set guifont=Operator\ Mono\ Light:h13
-  "set guifont=Inconsolata-dz\ for\ Powerline:h13
-  "set linespace=-3 " Adjust for broken Inconsolata-dz font ^^^
-  set guifont=Source\ Code\ Pro\ for\ Powerline:h13
+  set guifont=Inconsolata\ for\ Powerline:h13
 endif
 
 " Code folding
@@ -170,11 +165,10 @@ inoremap <esc> <nop>
 nnoremap <silent> <c-p> :Fgl<cr>
 
 " Map terminal commands
-nnoremap <silent> <leader>tf :call RunTestFile()<cr>
-nnoremap <silent> <leader>tt :call RunTestTest()<cr>
-nnoremap <silent> <leader>tc :call RunTypeCheck()<cr>
+nnoremap <silent> <leader>tf :call RunCommand("python tool/test" . %)<cr>
+nnoremap <silent> <leader>tt :call RunCommand("python tool/test" . %)<cr>
+nnoremap <silent> <leader>tc :call RunCommand("ruby bin/tc")<cr>
 nnoremap <silent> <leader>f :ALEFix<cr>
-nnoremap <silent> <leader>t :terminal python tool/test %<cr><c-w>j
 
 source ~/.vim/airline.vim
 source ~/.vim/ale.vim
@@ -185,4 +179,4 @@ scriptencoding utf-8
 set encoding=utf-8
 setglobal fileencoding=utf-8
 
-let NERDTreeHighlightCursorline = 0
+hi Terminal guibg=black guifg=#c0c0c0
