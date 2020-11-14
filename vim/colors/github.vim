@@ -82,7 +82,8 @@ hi Statement	guifg=#000000 gui=bold
 hi Type			guifg=#445588 gui=bold
 hi Number		guifg=#1C9898
 hi Todo			guifg=#FFFFFF guibg=#990000 gui=bold
-hi Special		guifg=#159828 gui=bold
+"hi Special		guifg=#159828 gui=bold
+hi Special		guifg=#D81745 gui=bold
 hi rubySymbol   guifg=#960B73
 hi Error        guibg=#f8f8ff guifg=#ff1100 gui=undercurl
 hi Todo         guibg=#f8f8ff guifg=#ff1100 gui=underline
