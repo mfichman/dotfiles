@@ -165,9 +165,9 @@ inoremap <esc> <nop>
 nnoremap <silent> <c-p> :Fgl<cr>
 
 " Map terminal commands
-nnoremap <silent> <leader>tf :call RunCommand("python tool\test\" . expand('%'))<cr>
-nnoremap <silent> <leader>tt :call RunCommand("python tool\test\" . expand('%'))<cr>
-nnoremap <silent> <leader>tc :call RunCommand("ruby bin\tc")<cr>
+nnoremap <silent> <leader>tf :call RunCommand("python tool\\test " . expand('%'))<cr>
+nnoremap <silent> <leader>tt :call RunCommand("python tool\\test " . expand('%'))<cr>
+nnoremap <silent> <leader>tc :call RunCommand("ruby bin\\tc")<cr>
 nnoremap <silent> <leader>f :ALEFix<cr>
 
 source ~/.vim/airline.vim
@@ -180,4 +180,6 @@ scriptencoding utf-8
 set encoding=utf-8
 setglobal fileencoding=utf-8
 
-hi Terminal guibg=black guifg=#c0c0c0
+"hi Terminal guibg=black guifg=#c0c0c0
+
+
