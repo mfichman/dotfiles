@@ -1,0 +1,75 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+require 'byebug'
+
+def system(command, exception: true)
+  $stdout.puts(command)
+  super
+  $stdout.puts
+end
+
+def git_stack_sync_commit(commit)
+  main = `git branch --show-current`
+  branch = `git notes show #{commit} 2> /dev/null`
+
+  if $?.success?
+    system("git checkout origin/master -fB #{branch}", exception: true)
+    system("git cherry-pick #{commit}", exception: true)
+    system("git checkout #{main}", exception: true)
+  end
+end
+
+def git_stack_sync
+  user = ENV.fetch('USER')
+  commits = `git log --pretty=format:"%h" origin/master..#{user}/main`
+
+  system("git stash", exception: true)
+  system("git checkout #{user}/main", exception: true)
+
+  commits.split(/\s+/).each do |commit|
+    git_stack_sync_commit(commit)
+  end
+end
+
+def git_stack_rebase
+  system("git fetch origin master", exception: true)
+  system("git rebase -i origin/master --autosquash", exception: true)
+end
+
+def git_stack_push_commit(commit)
+  branch = `git notes show #{commit} 2> /dev/null`
+
+  if $?.success?
+    system("git push -fu origin #{branch}", exception: true)
+  end
+end
+
+def git_stack_push
+  user = ENV.fetch('USER')
+  commits = `git log --pretty=format:"%h" origin/master..#{user}/main`
+
+  commits.split(/\s+/).each do |commit|
+    git_stack_push_commit(commit)
+  end
+end
+
+def main
+  command = ARGV.shift
+
+  case command
+  when 'sync'
+    git_stack_sync
+  when 'rebase'
+    git_stack_rebase
+  when 'push'
+    git_stack_push
+  else
+    raise ArgumentError, "'#{command}' is an invalid command"
+  end
+rescue => e
+  $stderr.puts("git: #{e.message}")
+end
+
+main
+
