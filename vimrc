@@ -28,6 +28,7 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'dense-analysis/ale'
 Plug 'yuezk/vim-js'
 Plug 'maxmellon/vim-jsx-pretty'
+Plug 'ziglang/zig.vim'
 call plug#end()
 
 augroup mine
@@ -65,6 +66,8 @@ augroup mine
     au BufNewFile *.c lua skeleton('c')
     au BufNewFile *.cfg lua skeleton('cfg')
     au BufNewFile *.cpp lua skeleton('cpp')
+    au BufNewFile *.cc lua skeleton('cpp')
+    au BufNewFile *.hpp lua skeleton('cpp')
     au BufNewFile *.frag lua skeleton('glsl')
     au BufNewFile *.geom lua skeleton('glsl')
     au BufNewFile *.glsl lua skeleton('glsl')
@@ -73,6 +76,7 @@ augroup mine
     au BufNewFile *.py lua skeleton('py')
     au BufNewFile *.vert lua skeleton('glsl')
     au BufNewFile *.jg lua skeleton('jg')
+    au BufNewFile *.c3 lua skeleton('c3')
 
     " Set custom tabstops for scripting languages
     au FileType css set shiftwidth=2 tabstop=2 softtabstop=2
@@ -87,6 +91,7 @@ augroup mine
     au FileType c set shiftwidth=4 tabstop=4 softtabstop=4
     au FileType cpp set shiftwidth=4 tabstop=4 softtabstop=4
     au FileType xml set shiftwidth=4 tabstop=4 softtabstop=4
+    au FileType c3 set shiftwidth=2 tabstop=2 softtabstop=2
 
     " Strip trailing whitespace on save
     au BufWritePre * :%s/\s\+$//e
@@ -176,6 +181,10 @@ source ~/.vim/coc.vim
 source ~/.vim/fzf.vim
 source ~/.vim/terminal.vim
 
+nnoremap <silent> dr :diffget REMOTE<cr>
+nnoremap <silent> db :diffget BASE<cr>
+nnoremap <silent> dl :diffget LOCAL<cr>
+
 scriptencoding utf-8
 set encoding=utf-8
 setglobal fileencoding=utf-8
@@ -183,3 +192,8 @@ setglobal fileencoding=utf-8
 "hi Terminal guibg=black guifg=#c0c0c0
 
 
+au GUIEnter * simalt ~x
+
+let NERDTreeShowHidden=1
+let NERDTreeIgnore=['^\.git$', '\.swp$']
+set wildignore=*.git,*.swp
