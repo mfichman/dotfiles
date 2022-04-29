@@ -5,7 +5,7 @@
 " URL: http://stanford.edu/~mfichman
 " Release Coordinator: Matt Fichman <matt.fichman@gmail.com>
 
-syn keyword c3Keyword return while for break else if import func match var intf const struct union static typeof pub xor inline extend
+syn keyword c3Keyword return while for break else if import func match var intf const struct union static typeof pub xor inline extend let mut fn final mod
 syn keyword c3Boolean true false
 syn keyword c3Todo contained TODO FIXME XXX
 syn keyword c3Constant nil
@@ -41,11 +41,16 @@ syn match c3Operator "\/\/@!"
 syn match c3Operator "\^"
 syn match c3Operator "&"
 syn match c3Operator "=="
-syn match c3Operator ":"
 syn match c3Operator "?"
 syn match c3Operator "::"
 syn match c3Operator "\.\.\."
 syn match c3Operator "|"
+syn match c3Operator "\["
+syn match c3Operator "]"
+syn match c3Operator "{"
+syn match c3Operator "}"
+syn match c3Operator "("
+syn match c3Operator ")"
 
 syn match c3Import "\(import\)\@<=\s*[a-zA-Z_][a-zA-Z0-9_:]*"
 
@@ -56,7 +61,7 @@ syn match c3Number "\<[0-9]\+\(\.[0-9]\+\)\{-\}\(e[+-]\{-\}[0-9]\+\)\{-\}\>"
 syn match c3Number "\<0x[0-9A-Fa-f]\+\>"
 syn match c3Number "\<0o[0-7]\+\>"
 syn match c3Number "\<0b[0-1]\+\>"
-syn match c3Constant "[A-Z][a-zA-Z0-9_]*"
+syn match c3Constant "\<[A-Z][a-zA-Z0-9_]*"
 
 syn region c3String start=+"+ end=+"+ skip=+\\"\|\\\\+
 syn region c3String start=+'+ end=+'+ skip=+\\'\|\\\\+

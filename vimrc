@@ -176,6 +176,14 @@ nnoremap <silent> <leader>tc :call RunTypeCheck()<cr>
 nnoremap <silent> <leader>f :ALEFix<cr>
 nnoremap <silent> <leader>t :terminal python tool/test %<cr><c-w>j
 
+" Paste/delete without yanking!!
+vnoremap p "0p
+vnoremap P "0P
+vnoremap y "0y
+vnoremap d "0d
+
+nnoremap <a-cr> :ALEFix<cr>
+
 source ~/.vim/airline.vim
 source ~/.vim/ale.vim
 source ~/.vim/coc.vim

@@ -9,5 +9,11 @@
 [user]
 	name = Matt Fichman
 	email = matt.fichman@gmail.com
+[alias]
+	amend = commit --amend --no-edit
+	rl = reflog --date=relative
+[notes]
+	rewriteRef = refs/notes/commits
+	rewriteMode = cat_sort_uniq
 [rebase]
-	instructionFOrmat = (%an %ae) %s
+	instructionFormat = (%an %ae) %s

@@ -15,3 +15,20 @@ let g:ale_ruby_rubocop_executable = 'bundle'
 hi ALEErrorSign guibg=#ECECEC guifg=#FF1100
 hi ALEWarningSign guibg=#ECECEC guifg=#FF8800
 hi SignColumn guibg=#ECECEC
+
+if !exists("g:ale_linters")
+    let g:ale_linters = {}
+endif
+
+let g:ale_linters['ruby'] = ['rubocop']
+let g:ale_linters['cpp'] = ['clangd']
+let g:ale_linters['c'] = ['clangd', 'clangtidy']
+
+if !exists("g:ale_fixers")
+    let g:ale_fixers = {}
+endif
+
+let g:ale_fixers['javascript'] = ['eslint']
+let g:ale_fixers['ruby'] = ['rubocop']
+let g:ale_fixers['javascriptreact'] = ['eslint']
+let g:ale_fixers['c'] = ['clangtidy']
