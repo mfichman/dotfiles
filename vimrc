@@ -28,6 +28,7 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'dense-analysis/ale'
 Plug 'yuezk/vim-js'
 Plug 'maxmellon/vim-jsx-pretty'
+Plug 'ziglang/zig.vim'
 call plug#end()
 
 augroup mine
@@ -65,6 +66,8 @@ augroup mine
     au BufNewFile *.c lua skeleton('c')
     au BufNewFile *.cfg lua skeleton('cfg')
     au BufNewFile *.cpp lua skeleton('cpp')
+    au BufNewFile *.cc lua skeleton('cpp')
+    au BufNewFile *.hpp lua skeleton('cpp')
     au BufNewFile *.frag lua skeleton('glsl')
     au BufNewFile *.geom lua skeleton('glsl')
     au BufNewFile *.glsl lua skeleton('glsl')
@@ -73,6 +76,7 @@ augroup mine
     au BufNewFile *.py lua skeleton('py')
     au BufNewFile *.vert lua skeleton('glsl')
     au BufNewFile *.jg lua skeleton('jg')
+    au BufNewFile *.c3 lua skeleton('c3')
 
     " Set custom tabstops for scripting languages
     au FileType css set shiftwidth=2 tabstop=2 softtabstop=2
@@ -87,6 +91,7 @@ augroup mine
     au FileType c set shiftwidth=4 tabstop=4 softtabstop=4
     au FileType cpp set shiftwidth=4 tabstop=4 softtabstop=4
     au FileType xml set shiftwidth=4 tabstop=4 softtabstop=4
+    au FileType c3 set shiftwidth=2 tabstop=2 softtabstop=2
 
     " Strip trailing whitespace on save
     au BufWritePre * :%s/\s\+$//e
@@ -132,15 +137,10 @@ set ruler
 
 " Font/rendering settings
 if has("win32")
-  "set rop=type:directx,geom:1,renmode:0,taamode:0
-  "set guifont=Consolas:h11
-  set guifont=Consolas\ NF:h11
-  "set guifont=Inconsolata\ for\ Powerline:h15
+  set rop=type:directx,geom:1,renmode:0,taamode:0
+  set guifont=Source\ Code\ Pro\ for\ Powerline:h10
 else
-  "set guifont=Operator\ Mono\ Light:h13
-  "set guifont=Inconsolata-dz\ for\ Powerline:h13
-  "set linespace=-3 " Adjust for broken Inconsolata-dz font ^^^
-  set guifont=Source\ Code\ Pro\ for\ Powerline:h13
+  set guifont=Inconsolata\ for\ Powerline:h13
 endif
 
 " Code folding
@@ -170,11 +170,10 @@ inoremap <esc> <nop>
 nnoremap <silent> <c-p> :Fgl<cr>
 
 " Map terminal commands
-nnoremap <silent> <leader>tf :call RunTestFile()<cr>
-nnoremap <silent> <leader>tt :call RunTestTest()<cr>
-nnoremap <silent> <leader>tc :call RunTypeCheck()<cr>
+nnoremap <silent> <leader>tf :call RunCommand("python tool\\test " . expand('%'))<cr>
+nnoremap <silent> <leader>tt :call RunCommand("python tool\\test " . expand('%'))<cr>
+nnoremap <silent> <leader>tc :call RunCommand("ruby bin\\tc")<cr>
 nnoremap <silent> <leader>f :ALEFix<cr>
-nnoremap <silent> <leader>t :terminal python tool/test %<cr><c-w>j
 
 " Paste/delete without yanking!!
 vnoremap p "0p
@@ -188,9 +187,21 @@ source ~/.vim/airline.vim
 source ~/.vim/ale.vim
 source ~/.vim/coc.vim
 source ~/.vim/fzf.vim
+source ~/.vim/terminal.vim
+
+nnoremap <silent> dr :diffget REMOTE<cr>
+nnoremap <silent> db :diffget BASE<cr>
+nnoremap <silent> dl :diffget LOCAL<cr>
 
 scriptencoding utf-8
 set encoding=utf-8
 setglobal fileencoding=utf-8
 
-let NERDTreeHighlightCursorline = 0
+"hi Terminal guibg=black guifg=#c0c0c0
+
+
+au GUIEnter * simalt ~x
+
+let NERDTreeShowHidden=1
+let NERDTreeIgnore=['^\.git$', '\.swp$']
+set wildignore=*.git,*.swp
