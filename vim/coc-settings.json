@@ -1,3 +1,9 @@
 {
-    "diagnostic.displayByAle": true
+    "diagnostic.displayByAle": true,
+    "coc.preferences.formatOnSaveFiletypes": ["python"],
+    "jedi.workspace.extraPaths": [
+        "./build/py",
+        "/Users/Matt/Code/instabase/shared-utils/py-utils/system-tests/build/py",
+        "/Users/Matt/Code/instabase/shared-utils/py-utils/internal/system-test-utils/build/py"
+    ]
 }

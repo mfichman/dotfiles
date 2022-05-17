@@ -13,28 +13,51 @@ PROMPT_COMMAND="__ps1_newline_login; $PROMPT_COMMAND"
 export PS1="❯ "
 export CLICOLOR=1
 
-# Make rake parallel:setup use database x_test1 database instead of x_test
-export PARALLEL_TEST_FIRST_IS_1=true
-
 # Default editor for git
-export EDITOR="/usr/local/bin/gvim -f"
-
-# Python/pyenv/virtualenv
-export PATH="$(pyenv root)/shims:/usr/local/sbin:$PATH"
-export VIRTUAL_ENV_DISABLE_PROMPT=1
+export EDITOR="gvim -f"
 
 # Path for flutter
-export PATH="$PATH:~/code/flutter/bin"
+#export PATH="$PATH:~/code/flutter/bin"
 
-# Ruby
-export PATH="$PATH:$HOME/.rvm/bin"
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+# MacVim
+export PATH="$PATH:/Applications/MacVim.app/Contents/bin"
 
+# Homebrew
+#eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# Rust
+export PATH="$HOME/.cargo/bin:$PATH"
+
+# Python/pyenv/virtualenv
+#export VIRTUAL_ENV_DISABLE_PROMPT=1
+#source ~/Code/venv3/bin/activate
+eval "$(pyenv init -)"
+export PATH="$(pyenv root)/shims:/usr/local/sbin:$PATH"
+
+# Node
+eval "$(nodenv init -)"
+
+# Go
+export GOPATH="$HOME/Code/go"
+export PATH=$PATH:/usr/local/opt/go/libexec/bin
+export PATH="/usr/local/go/bin:$PATH"
+export PATH="$GOPATH/bin:$PATH"
+export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig
+
+# Other
+export PATH="$PATH:$HOME/bin"
+export PATH="$PATH:$HOME/.bin"
+
+# Aliases
 alias less='less -R'
 
 
-export PATH="$HOME/.cargo/bin:$PATH"
+# Git
+export GIT_STACK_USER=mfichman
+export GIT_STACK_UPSTREAM=upstream/master
 
-#export OVERCOMMIT_DISABLE=1
+alias gss="git stack sync $GIT_STACK_UPSTREAM"
+alias gsr="git stack rebase $GIT_STACK_UPSTREAM"
+alias gsc="git stack clean $GIT_STACK_UPSTREAM"
 
-eval "$(pyenv init -)"
+

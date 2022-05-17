@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'optparse'
-require 'byebug'
+#require 'byebug'
 
 def system(command, exception: true)
   $stdout.puts(command)
@@ -9,20 +9,29 @@ def system(command, exception: true)
   $stdout.puts
 end
 
+def user
+  user = ENV.fetch('GIT_STACK_USER', ENV.fetch('USER'))
+end
+
+def upstream
+  upstream = ARGV[0]
+  raise ArgumentError, "missing argument: upstream" unless upstream
+  upstream
+end
+
 def git_stack_sync_commit(commit)
   main = `git branch --show-current`
   branch = `git notes show #{commit} 2> /dev/null`
 
   if $?.success?
-    system("git checkout origin/master -fB #{branch}", exception: true)
+    system("git checkout #{upstream} -fB #{branch}", exception: true)
     system("git cherry-pick #{commit}", exception: true)
     system("git checkout #{main}", exception: true)
   end
 end
 
 def git_stack_sync
-  user = ENV.fetch('USER')
-  commits = `git log --pretty=format:"%h" origin/master..#{user}/main`
+  commits = `git log --pretty=format:"%h" #{upstream}..#{user}/main`
 
   system("git stash", exception: true)
   system("git checkout #{user}/main", exception: true)
@@ -33,8 +42,8 @@ def git_stack_sync
 end
 
 def git_stack_rebase
-  system("git fetch origin master", exception: true)
-  system("git rebase -i origin/master --autosquash", exception: true)
+  system("git fetch #{upstream.split('/').join(' ')}", exception: true)
+  system("git rebase -i #{upstream} --autosquash", exception: true)
 end
 
 def git_stack_push_commit(commit)
@@ -46,7 +55,6 @@ def git_stack_push_commit(commit)
 end
 
 def git_stack_push
-  user = ENV.fetch('USER')
   commits = `git log --pretty=format:"%h" origin/master..#{user}/main`
 
   commits.split(/\s+/).each do |commit|
@@ -65,7 +73,7 @@ def main
   when 'push'
     git_stack_push
   else
-    raise ArgumentError, "'#{command}' is an invalid command"
+    raise ArgumentError, "usage: git stack sync|rebase|push"
   end
 rescue => e
   $stderr.puts("git: #{e.message}")

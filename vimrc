@@ -13,21 +13,22 @@ luafile ~/.vim/scripts/init.lua
 
 " Packages and package settings
 call plug#begin('~/.vim/plugged')
-Plug 'joshdick/onedark.vim'
-Plug 'scrooloose/nerdtree'
 Plug 'chrisbra/csv.vim'
-Plug 'vim-ruby/vim-ruby'
-Plug 'tpope/vim-fugitive'
+Plug 'dense-analysis/ale'
+Plug 'fatih/vim-go'
+Plug 'joshdick/onedark.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'yegappan/greplace'
 Plug 'keith/swift.vim'
-Plug 'ngmy/vim-rubocop'
+Plug 'maxmellon/vim-jsx-pretty'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'ngmy/vim-rubocop'
+Plug 'scrooloose/nerdtree'
+Plug 'tpope/vim-fugitive'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'dense-analysis/ale'
+Plug 'vim-ruby/vim-ruby'
+Plug 'yegappan/greplace'
 Plug 'yuezk/vim-js'
-Plug 'maxmellon/vim-jsx-pretty'
 Plug 'ziglang/zig.vim'
 call plug#end()
 
@@ -92,15 +93,11 @@ augroup mine
     au FileType cpp set shiftwidth=4 tabstop=4 softtabstop=4
     au FileType xml set shiftwidth=4 tabstop=4 softtabstop=4
     au FileType c3 set shiftwidth=2 tabstop=2 softtabstop=2
+    au FileType python set shiftwidth=2 tabstop=2 softtabstop=2
 
     " Strip trailing whitespace on save
-    au BufWritePre * :%s/\s\+$//e
+    "au BufWritePre * :%s/\s\+$//e
 augroup end
-
-" Open NERDTree by default
-autocmd VimEnter * NERDTree
-autocmd VimEnter * wincmd w
-let NERDTreeHighlightCursorline = 0
 
 " Disable annoying bells
 let g:netrw_silent = 1
@@ -111,12 +108,18 @@ syntax on
 if has("win32")
   let g:airline_theme = 'base16'
   colors github
+
 elseif system("defaults read -g AppleInterfaceStyle") =~ '^Dark'
   let g:airline_theme = 'onedark'
   colors onedark
 else
   let g:airline_theme = 'base16'
   colors github
+endif
+
+" Launch fullscreen
+if has("win32")
+    au GUIEnter * simalt ~x
 endif
 
 " Tabs/whitespace
@@ -135,12 +138,20 @@ set nowrap
 set number
 set ruler
 
+# Encoding options
+set encoding=utf-8
+scriptencoding utf-8
+setglobal fileencoding=utf-8
+
+# Wildcards
+set wildignore=*.git,*.swp
+
 " Font/rendering settings
 if has("win32")
   set rop=type:directx,geom:1,renmode:0,taamode:0
   set guifont=Source\ Code\ Pro\ for\ Powerline:h10
 else
-  set guifont=Inconsolata\ for\ Powerline:h13
+  set guifont=Source\ Code\ Pro\ for\ Powerline:h13
 endif
 
 " Code folding
@@ -152,56 +163,13 @@ endif
 " Tab formatting options
 filetype plugin indent on
 
-" Key mappings
-inoremap <down> <nop>
-inoremap <left> <nop>
-inoremap <right> <nop>
-inoremap <up> <nop>
-noremap <down> <nop>
-noremap <left> <nop>
-noremap <right> <nop>
-noremap <up> <nop>
-
-" Remap ESC key
-inoremap jk <esc>
-inoremap <esc> <nop>
-
-" Map search function
-nnoremap <silent> <c-p> :Fgl<cr>
-
-" Map terminal commands
-nnoremap <silent> <leader>tf :call RunCommand("python tool\\test " . expand('%'))<cr>
-nnoremap <silent> <leader>tt :call RunCommand("python tool\\test " . expand('%'))<cr>
-nnoremap <silent> <leader>tc :call RunCommand("ruby bin\\tc")<cr>
-nnoremap <silent> <leader>f :ALEFix<cr>
-
-" Paste/delete without yanking!!
-vnoremap p "0p
-vnoremap P "0P
-vnoremap y "0y
-vnoremap d "0d
-
-nnoremap <a-cr> :ALEFix<cr>
+" Build recursive
+command! -nargs=* Make execute '!make -C ' . fnamemodify(findfile("Makefile", ".;"), ':p:h') . ' ' . <f-args>
 
 source ~/.vim/airline.vim
 source ~/.vim/ale.vim
 source ~/.vim/coc.vim
 source ~/.vim/fzf.vim
 source ~/.vim/terminal.vim
-
-nnoremap <silent> dr :diffget REMOTE<cr>
-nnoremap <silent> db :diffget BASE<cr>
-nnoremap <silent> dl :diffget LOCAL<cr>
-
-scriptencoding utf-8
-set encoding=utf-8
-setglobal fileencoding=utf-8
-
-"hi Terminal guibg=black guifg=#c0c0c0
-
-
-au GUIEnter * simalt ~x
-
-let NERDTreeShowHidden=1
-let NERDTreeIgnore=['^\.git$', '\.swp$']
-set wildignore=*.git,*.swp
+source ~/.vim/nerdtree.vim
+source ~/.vim/mappings.vim

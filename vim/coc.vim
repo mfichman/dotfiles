@@ -66,11 +66,11 @@ nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
 " GoTo code navigation.
 "nmap <silent> gd <Plug>(coc-definition)
-"nmap <silent> gy <Plug>(coc-type-definition)
+"nmap <silent> gt <Plug>(coc-type-definition)
 "nmap <silent> gi <Plug>(coc-implementation)
 "nmap <silent> gr <Plug>(coc-references)
 nmap gd :call <SID>goto_tag("Definition")<CR>
-nmap gy :call <SID>goto_tag("TypeDefinition")<CR>
+nmap gt :call <SID>goto_tag("TypeDefinition")<CR>
 nmap gi :call <SID>goto_tag("Implementation")<CR>
 nmap gr :call <SID>goto_tag("References")<CR>
 
