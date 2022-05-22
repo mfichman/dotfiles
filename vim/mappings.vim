@@ -16,9 +16,7 @@ inoremap <esc> <nop>
 nnoremap <silent> <c-p> :Fgl<cr>
 
 " Map terminal commands
-nnoremap <silent> <leader>tf :call RunCommand("python tool\\test " . expand('%'))<cr>
-nnoremap <silent> <leader>tt :call RunCommand("python tool\\test " . expand('%'))<cr>
-nnoremap <silent> <leader>tc :call RunCommand("ruby bin\\tc")<cr>
+"nnoremap <silent> <leader>tf :call RunCommand("make bld/" . expand('%') . ".out")<cr>
 nnoremap <silent> <leader>f :ALEFix<cr>
 nnoremap <silent> <leader>b :Build<cr>
 nnoremap <silent> <leader>e :call RunCommand(getline('.'))<cr>

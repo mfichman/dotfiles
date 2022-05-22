@@ -20,7 +20,7 @@ Plug 'joshdick/onedark.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'keith/swift.vim'
 Plug 'maxmellon/vim-jsx-pretty'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+"Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'ngmy/vim-rubocop'
 Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-fugitive'
@@ -168,7 +168,7 @@ command! -nargs=* Make execute '!make -C ' . fnamemodify(findfile("Makefile", ".
 
 source ~/.vim/airline.vim
 source ~/.vim/ale.vim
-source ~/.vim/coc.vim
+"source ~/.vim/coc.vim
 source ~/.vim/fzf.vim
 source ~/.vim/terminal.vim
 source ~/.vim/nerdtree.vim
