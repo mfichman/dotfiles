@@ -1,11 +1,13 @@
 {
-    "clangd.path": "~\\AppData\\Local\\coc\\extensions\\coc-clangd-data\\install\\13.0.0\\clangd_13.0.0\\bin\\clangd.exe",
-    "python.workspaceSymbols.enabled": false,
-    "diagnostic.displayByAle": true,
-    "coc.preferences.formatOnSaveFiletypes": ["python"],
-    "jedi.workspace.extraPaths": [
-        "./build/py",
-        "/Users/Matt/Code/instabase/shared-utils/py-utils/system-tests/build/py",
-        "/Users/Matt/Code/instabase/shared-utils/py-utils/internal/system-test-utils/build/py"
-    ]
+  "clangd.path": "~\\AppData\\Local\\coc\\extensions\\coc-clangd-data\\install\\13.0.0\\clangd_13.0.0\\bin\\clangd.exe",
+  "diagnostic.displayByAle": true,
+  "coc.preferences.formatOnSaveFiletypes": [
+    "python",
+    "cpp",
+    "json",
+    "javascript",
+    "c"
+  ],
+  "jedi.enable": true,
+  "jedi.workspace.extraPaths": []
 }
