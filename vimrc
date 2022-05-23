@@ -21,6 +21,7 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'keith/swift.vim'
 Plug 'maxmellon/vim-jsx-pretty'
 "Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'Shougo/deoplete.nvim.git'
 Plug 'ngmy/vim-rubocop'
 Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-fugitive'
@@ -173,3 +174,4 @@ source ~/.vim/fzf.vim
 source ~/.vim/terminal.vim
 source ~/.vim/nerdtree.vim
 source ~/.vim/mappings.vim
+source ~/.vim/deoplete.vim
