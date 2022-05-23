@@ -20,7 +20,7 @@ nnoremap <silent> <leader>tf :call RunCommand("python tool\\test " . expand('%')
 nnoremap <silent> <leader>tt :call RunCommand("python tool\\test " . expand('%'))<cr>
 nnoremap <silent> <leader>tc :call RunCommand("ruby bin\\tc")<cr>
 nnoremap <silent> <leader>f :ALEFix<cr>
-nnoremap <silent> <leader>b :Build<cr>
+nnoremap <silent> <leader>b :Make build<cr>
 nnoremap <silent> <leader>e :call RunCommand(getline('.'))<cr>
 nnoremap <silent> dr :diffget REMOTE<cr>
 nnoremap <silent> db :diffget BASE<cr>

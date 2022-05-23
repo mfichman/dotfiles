@@ -138,12 +138,12 @@ set nowrap
 set number
 set ruler
 
-# Encoding options
+" Encoding options
 set encoding=utf-8
 scriptencoding utf-8
 setglobal fileencoding=utf-8
 
-# Wildcards
+" Wildcards
 set wildignore=*.git,*.swp
 
 " Font/rendering settings

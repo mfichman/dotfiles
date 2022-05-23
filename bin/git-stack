@@ -19,15 +19,21 @@ def upstream
   upstream
 end
 
-def git_stack_sync_commit(commit)
+def git_stack_sync_commit(commit, branches)
   main = `git branch --show-current`
   branch = `git notes show #{commit} 2> /dev/null`
 
-  if $?.success?
+  return unless $?.success?
+
+  if branches.include?(branch)
+    system("git checkout #{branch}", exception: true)
+  else
     system("git checkout #{upstream} -fB #{branch}", exception: true)
-    system("git cherry-pick #{commit}", exception: true)
-    system("git checkout #{main}", exception: true)
+    branches << branch
   end
+
+  system("git cherry-pick #{commit}", exception: true)
+  system("git checkout #{main}", exception: true)
 end
 
 def git_stack_sync
@@ -36,8 +42,10 @@ def git_stack_sync
   system("git stash", exception: true)
   system("git checkout #{user}/main", exception: true)
 
-  commits.split(/\s+/).each do |commit|
-    git_stack_sync_commit(commit)
+  branches = []
+
+  commits.split(/\s+/).reverse.each do |commit|
+    git_stack_sync_commit(commit, branches)
   end
 end
 
