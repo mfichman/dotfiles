@@ -1,12 +1,13 @@
 #!/usr/bin/env ruby
 
 require 'optparse'
+require 'json'
 #require 'byebug'
 
-def system(command, exception: true)
-  $stdout.puts(command)
-  super
-  $stdout.puts
+def system(command, exception: true, silent: false)
+  $stdout.puts(command) unless silent
+  super(command, exception: exception)
+  $stdout.puts unless silent
 end
 
 def user
@@ -21,7 +22,7 @@ end
 
 def git_stack_sync_commit(commit, branches)
   main = `git branch --show-current`
-  branch = `git notes show #{commit} 2> /dev/null`
+  branch = `git notes show #{commit} 2> /dev/null`.strip
 
   return unless $?.success?
 
@@ -47,6 +48,8 @@ def git_stack_sync
   commits.split(/\s+/).reverse.each do |commit|
     git_stack_sync_commit(commit, branches)
   end
+
+  File.write("#{ENV['HOME']}/.git-stack-branches", branches.to_json)
 end
 
 def git_stack_rebase
@@ -70,6 +73,37 @@ def git_stack_push
   end
 end
 
+def git_stack_clean
+  commits = `git log --pretty=format:"%h" #{upstream}..#{user}/main`
+
+  branches = File.open("#{ENV['HOME']}/.git-stack-branches") do |fd|
+    JSON.load(fd)
+  end
+
+  branches.select! do |branch|
+    `git rev-parse --verify #{branch} 2> /dev/null`
+    $?.success?
+  end
+
+  branches -= commits.split(/\s+/).reverse.map do |commit|
+    `git notes show #{commit} 2> /dev/null`.strip
+  end
+
+  return if branches.empty?
+
+  puts branches.join("\n")
+  puts
+  puts "Delete these branches? (Y/N)"
+
+  return if STDIN.gets.strip.upcase != 'Y'
+
+  puts
+
+  branches.each do |branch|
+    system("git branch -D #{branch}", exception: true, silent: true)
+  end
+end
+
 def main
   command = ARGV.shift
 
@@ -80,6 +114,8 @@ def main
     git_stack_rebase
   when 'push'
     git_stack_push
+  when 'clean'
+    git_stack_clean
   else
     raise ArgumentError, "usage: git stack sync|rebase|push"
   end

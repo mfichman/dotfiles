@@ -26,7 +26,7 @@ endif
 let g:ale_linters['ruby'] = ['rubocop']
 let g:ale_linters['cpp'] = ['clangd']
 let g:ale_linters['c'] = ['clangd']
-let g:ale_linters['python'] = []
+let g:ale_linters['python'] = ['jedils']
 
 if !exists("g:ale_fixers")
     let g:ale_fixers = {}
@@ -46,3 +46,5 @@ nmap gd :ALEGoToDefinition<CR>
 nmap gt :ALEGoToTypeDefinition<CR>
 nmap gi :ALEGoToImplementation<CR>
 nmap gr :ALEFindReferences<CR>
+
+
