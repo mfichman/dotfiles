@@ -15,7 +15,7 @@ let g:fzf_colors =
   \ 'spinner': ['fg', 'FzfNormal'],
   \ 'header':  ['fg', 'FzfNormal'] }
 
-command! -nargs=0 Fgl call fzf#run({'source': 'git ls-files $(git rev-parse --show-toplevel)', 'sink': 'e', 'down': '20%', 'options': '--no-color'})
+command! -nargs=0 Fgl call fzf#run({'source': 'git ls-files', 'sink': 'e', 'down': '20%', 'options': '--no-color'})
 
 autocmd! FileType fzf
 autocmd FileType fzf set laststatus=0 noshowmode noruler | autocmd BufLeave <buffer> set laststatus=2 showmode ruler
