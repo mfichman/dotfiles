@@ -37,24 +37,6 @@ call plug#end()
 
 augroup mine
     au!
-    " Filetype handling
-    au BufRead,BufNewFile *.ll setf lex
-    au BufRead,BufNewFile *.c2 set filetype=c2
-    au BufRead,BufNewFile *.c3 set filetype=c3
-    au BufRead,BufNewFile *.frag set filetype=glsl
-    au BufRead,BufNewFile *.geom set filetype=glsl
-    au BufRead,BufNewFile *.glsl set filetype=glsl
-    au BufRead,BufNewFile *.go set filetype=go
-    au BufRead,BufNewFile *.vert set filetype=glsl
-    au BufRead,BufNewFile *.c2 setf c2
-    au BufRead,BufNewFile *.h set filetype=c
-    au BufRead,BufNewFile *.c.tmpl set filetype=c
-    au BufRead,BufNewFile *.h.tmpl set filetype=c
-    au BufRead,BufNewFile *.d.tmpl set filetype=text
-    au BufRead,BufNewFile *.csv.erb set filetype=eruby.csv
-    au BufRead,BufNewFile *.json.erb set filetype=eruby.json
-    au BufRead,BufNewFile *.amp.erb set filetype=eruby.html
-    au BufRead,BufNewFile *.pdf.prawn set filetype=ruby
 
     au FileType gitcommit set wrap
     au FileType gitcommit set linebreak
@@ -62,44 +44,6 @@ augroup mine
     au FileType markdown set wrap
     au FileType markdown set linebreak
     au FileType markdown set nolist
-
-    " Fix lua comment formatting
-    au BufRead,BufNewFile *.lua setlocal cms=--%s com=s:--[[,m:\ ,e:]],:--
-
-    " Templates for various filetypes
-    au BufNewFile *.c lua skeleton('c')
-    au BufNewFile *.cfg lua skeleton('cfg')
-    au BufNewFile *.cpp lua skeleton('cpp')
-    au BufNewFile *.cc lua skeleton('cpp')
-    au BufNewFile *.hpp lua skeleton('cpp')
-    au BufNewFile *.frag lua skeleton('glsl')
-    au BufNewFile *.geom lua skeleton('glsl')
-    au BufNewFile *.glsl lua skeleton('glsl')
-    au BufNewFile *.h lua skeleton('h')
-    au BufNewFile *.lua lua skeleton('lua')
-    au BufNewFile *.py lua skeleton('py')
-    au BufNewFile *.vert lua skeleton('glsl')
-    au BufNewFile *.jg lua skeleton('jg')
-    au BufNewFile *.c3 lua skeleton('c3')
-
-    " Set custom tabstops for scripting languages
-    au FileType css set shiftwidth=2 tabstop=2 softtabstop=2
-    au FileType hs set shiftwidth=2 tabstop=2 softtabstop=2
-    au FileType haskell set shiftwidth=2 tabstop=2 softtabstop=2
-    au FileType eruby set shiftwidth=2 tabstop=2 softtabstop=2
-    au FileType html set shiftwidth=2 tabstop=2 softtabstop=2
-    au FileType javascript set shiftwidth=2 tabstop=2 softtabstop=2
-    au FileType jsx set shiftwidth=2 tabstop=2 softtabstop=2
-    au FileType lua set shiftwidth=2 tabstop=2 softtabstop=2
-    au FileType ruby set shiftwidth=2 tabstop=2 softtabstop=2
-    au FileType c set shiftwidth=4 tabstop=4 softtabstop=4
-    au FileType cpp set shiftwidth=4 tabstop=4 softtabstop=4
-    au FileType xml set shiftwidth=4 tabstop=4 softtabstop=4
-    au FileType c3 set shiftwidth=2 tabstop=2 softtabstop=2
-    au FileType python set shiftwidth=2 tabstop=2 softtabstop=2
-
-    " Strip trailing whitespace on save
-    "au BufWritePre * :%s/\s\+$//e
 augroup end
 
 " Disable annoying bells
