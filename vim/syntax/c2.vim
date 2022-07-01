@@ -23,6 +23,7 @@ syn cluster c2CommentGroup contains=apTodo
 
 syn keyword c2Constant null
 
+syn match c2Function "\(fn\)\@<=\s*[a-zA-Z_][a-zA-Z0-9_]*"
 "syn match c2Function "\(func\)\@<=\s*[a-zA-Z_][a-zA-Z0-9_]*"
 "syn match c2Function "\(module\)\@<=\s*[a-zA-Z_][a-zA-Z0-9_]*"
 "syn match c2Function "\(macro\)\@<=\s*[a-zA-Z_][a-zA-Z0-9_]*"

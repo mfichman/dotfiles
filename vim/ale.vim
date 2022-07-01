@@ -27,6 +27,7 @@ let g:ale_linters['ruby'] = ['rubocop']
 let g:ale_linters['cpp'] = ['clangd']
 let g:ale_linters['c'] = ['clangd']
 let g:ale_linters['python'] = []
+let g:ale_linters['go'] = ['gopls']
 
 if !exists("g:ale_fixers")
     let g:ale_fixers = {}
@@ -39,6 +40,7 @@ let g:ale_fixers['c'] = ['clang-format']
 let g:ale_fixers['cpp'] = ['clang-format']
 let g:ale_fixers['python'] = ['autoflake', 'yapf']
 let g:ale_fixers['json'] = ['prettier']
+let g:ale_fixers['go'] = ['gofmt']
 
 " Mappings ------------------------------------------------------------------
 

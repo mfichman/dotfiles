@@ -15,7 +15,7 @@ luafile ~/.vim/scripts/init.lua
 call plug#begin('~/.vim/plugged')
 Plug 'chrisbra/csv.vim'
 Plug 'dense-analysis/ale'
-Plug 'fatih/vim-go'
+"Plug 'fatih/vim-go'
 Plug 'joshdick/onedark.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'keith/swift.vim'
