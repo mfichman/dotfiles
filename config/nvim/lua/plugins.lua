@@ -12,6 +12,7 @@ require('packer').startup(function(use)
   use 'vim-airline/vim-airline-themes'
   use 'junegunn/fzf'
   use 'scrooloose/nerdtree'
+  use 'tpope/vim-fugitive'
     
   if packer_bootstrap then
     require('packer').sync()

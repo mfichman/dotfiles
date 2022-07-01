@@ -35,5 +35,3 @@ vim.keymap.set('v', 'p', '"0p')
 vim.keymap.set('v', 'P', '"0P')
 vim.keymap.set('v', 'y', '"0y')
 vim.keymap.set('v', 'd', '"0d')
-
-

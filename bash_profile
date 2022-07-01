@@ -61,4 +61,6 @@ alias gsr="git stack rebase $GIT_STACK_UPSTREAM"
 alias gsc="git stack clean $GIT_STACK_UPSTREAM"
 alias gsp="git stack push $GIT_STACK_UPSTREAM"
 
+alias vim="nvim"
+alias gvim="nvim-qt"
 
