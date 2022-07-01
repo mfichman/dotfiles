@@ -13,15 +13,16 @@ luafile ~/.vim/scripts/init.lua
 
 " Packages and package settings
 call plug#begin('~/.vim/plugged')
+Plug 'sebdah/vim-delve'
 Plug 'chrisbra/csv.vim'
 Plug 'dense-analysis/ale'
-Plug 'fatih/vim-go'
+"Plug 'fatih/vim-go'
 Plug 'joshdick/onedark.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'keith/swift.vim'
 Plug 'maxmellon/vim-jsx-pretty'
 "Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'Shougo/deoplete.nvim.git'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'ngmy/vim-rubocop'
 Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-fugitive'
@@ -31,6 +32,7 @@ Plug 'vim-ruby/vim-ruby'
 Plug 'yegappan/greplace'
 Plug 'yuezk/vim-js'
 Plug 'ziglang/zig.vim'
+Plug 'solarnz/thrift.vim'
 call plug#end()
 
 augroup mine

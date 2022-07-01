@@ -57,19 +57,19 @@ def git_stack_rebase
   system("git rebase -i #{upstream} --autosquash", exception: true)
 end
 
-def git_stack_push_commit(commit)
-  branch = `git notes show #{commit} 2> /dev/null`
-
-  if $?.success?
-    system("git push -fu origin #{branch}", exception: true)
-  end
+def git_stack_push_branch(branch)
+  system("git push -fu origin #{branch}", exception: true)
 end
 
 def git_stack_push
-  commits = `git log --pretty=format:"%h" origin/master..#{user}/main`
+  commits = `git log --pretty=format:"%h" #{upstream}..#{user}/main`
 
-  commits.split(/\s+/).each do |commit|
-    git_stack_push_commit(commit)
+  branches = commits.split(/\s+/).map do |commit|
+    `git notes show #{commit} 2> /dev/null`.strip
+  end
+
+  branches.uniq.each do |branch|
+    git_stack_push_branch(branch) if branch != ''
   end
 end
 
@@ -88,6 +88,8 @@ def git_stack_clean
   branches -= commits.split(/\s+/).reverse.map do |commit|
     `git notes show #{commit} 2> /dev/null`.strip
   end
+
+  branches = branches.uniq
 
   return if branches.empty?
 

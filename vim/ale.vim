@@ -23,22 +23,30 @@ if !exists("g:ale_linters")
     let g:ale_linters = {}
 endif
 
+let g:ale_linters['typescriptreact'] = ['tslint', 'tsserver']
+let g:ale_linters['javascript'] = ['eslint', 'tsserver']
 let g:ale_linters['ruby'] = ['rubocop']
 let g:ale_linters['cpp'] = ['clangd']
 let g:ale_linters['c'] = ['clangd']
-let g:ale_linters['python'] = ['jedils']
+let g:ale_linters['python'] = ['jedils', 'mypy']
+let g:ale_linters['thrift'] = ['thrift']
+let g:ale_linters['go'] = ['gopls'] 
+", 'golint']
 
 if !exists("g:ale_fixers")
     let g:ale_fixers = {}
 endif
 
-let g:ale_fixers['javascript'] = ['eslint']
+let g:ale_fixers['javascript'] = ['eslint', 'prettier']
+let g:ale_fixers['javascriptreact'] = ['eslint', 'prettier']
+let g:ale_fixers['typescriptreact'] = ['prettier']
+let g:ale_fixers['typescript'] = ['prettier']
 let g:ale_fixers['ruby'] = ['rubocop']
-let g:ale_fixers['javascriptreact'] = ['eslint']
 let g:ale_fixers['c'] = ['clang-format']
 let g:ale_fixers['cpp'] = ['clang-format']
 let g:ale_fixers['python'] = ['autoflake', 'yapf']
 let g:ale_fixers['json'] = ['prettier']
+let g:ale_fixers['go'] = ['gofmt']
 
 " Mappings ------------------------------------------------------------------
 
