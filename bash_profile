@@ -46,7 +46,7 @@ export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig
 
 # Other
 export PATH="$PATH:$HOME/bin"
-export PATH="$PATH:$HOME/.bin"
+export PATH="$HOME/.bin:$PATH"
 
 # Aliases
 alias less='less -R'
@@ -61,4 +61,5 @@ alias gsr="git stack rebase $GIT_STACK_UPSTREAM"
 alias gsc="git stack clean $GIT_STACK_UPSTREAM"
 alias gsp="git stack push $GIT_STACK_UPSTREAM"
 
+alias vim="nvim"
 

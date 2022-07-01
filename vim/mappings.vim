@@ -16,13 +16,17 @@ inoremap <esc> <nop>
 nnoremap <silent> <c-p> :Fgl<cr>
 
 " Map terminal commands
-"nnoremap <silent> <leader>tf :call RunCommand("make bld/" . expand('%') . ".out")<cr>
+nnoremap <silent> <leader>tf :call RunTestFile()<cr>
+nnoremap <silent> <leader>tt :call RunTest()<cr>
 nnoremap <silent> <leader>f :ALEFix<cr>
 nnoremap <silent> <leader>b :Make build<cr>
 nnoremap <silent> <leader>e :call RunCommand(getline('.'))<cr>
 nnoremap <silent> dr :diffget REMOTE<cr>
 nnoremap <silent> db :diffget BASE<cr>
 nnoremap <silent> dl :diffget LOCAL<cr>
+
+nnoremap <silent> <leader>en :ALENext<cr>
+nnoremap <silent> <leader>ep :ALEPrev<cr>
 
 " Paste/delete without yanking!!
 vnoremap p "0p
