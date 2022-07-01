@@ -44,6 +44,13 @@ vim.cmd("sign define DiagnosticSignWarn text=● texthl=DiagnosticSignWarn")
 vim.cmd("sign define DiagnosticSignInfo text=● texthl=DiagnosticSignInfo")
 vim.cmd("sign define DiagnosticSignHint text=● texthl=DiagnosticSignError")
 
+-- Shortcuts
+vim.cmd("command! -nargs=* Make :call RunCommand('make -C ' . fnamemodify(findfile('Makefile', '.;'), ':p:h') . ' ' . <q-args>)")
+vim.cmd("command! -nargs=* GoBuild :call RunCommand('cd ' . fnamemodify(findfile('go.mod', '.;'), ':p:h') . ' && go build -x')")
+vim.cmd("command! -nargs=* GoTest :call RunCommand('cd ' . fnamemodify(findfile('go.mod', '.;'), ':p:h') . ' && go test -x')")
+vim.cmd("command! -nargs=* Go :call RunCommand('cd ' . fnamemodify(findfile('go.mod', '.;'), ':p:h') . ' && go ' . <q-args>)")
+vim.cmd("source ~/.vim/terminal.vim")
+
 require 'plugins'
 require 'mappings'
 require 'lsp'
