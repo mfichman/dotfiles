@@ -16,7 +16,7 @@ vim.g.fzf_colors = {
   ['header'] =   {'fg', 'FzfNormal'} 
 }
 
-vim.api.nvim_create_user_command('Fgl', "call fzf#run({'source': 'git -C $(git rev-parse --show-toplevel) ls-files', 'sink': 'e', 'down': '20%', 'options': '--no-color'})", {
+vim.api.nvim_create_user_command('Fgl', "call fzf#run({'source': 'git ls-files', 'sink': 'e', 'down': '20%', 'options': '--no-color'})", {
   bang = true, 
   nargs = 0,
 })

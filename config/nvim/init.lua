@@ -6,7 +6,12 @@ vim.g.netrw_slilent = 1
 vim.cmd('colorscheme github')
 
 -- Font/rendering settings
-vim.opt.guifont = 'Source Code Pro for Powerline:h13'
+if vim.fn.has('win32') then
+  vim.opt.guifont = 'Source Code Pro for Powerline:h10'
+else
+  vim.opt.guifont = 'Source Code Pro for Powerline:h13'
+
+end
 
 -- Tabs/whitespace
 vim.opt.expandtab = true
