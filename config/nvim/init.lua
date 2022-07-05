@@ -1,6 +1,9 @@
 vim.cmd 'set rtp^=~/.vim'
 
 vim.g.netrw_slilent = 1
+--vim.g.neovide_cursor_vfx_mode = "railgun"
+vim.g.neovide_cursor_animation_length = 0.01
+
 
 -- Colors
 vim.cmd('colorscheme github')
@@ -44,10 +47,10 @@ vim.cmd('hi DiagnosticSignError guibg=#ECECEC guifg=Red')
 vim.cmd('hi DiagnosticSignWarn guibg=#ECECEC guifg=Orange')
 vim.cmd('hi DiagnosticSignInfo guibg=#ECECEC guifg=LightBlue')
 vim.cmd('hi DiagnosticSignHint guibg=#ECECEC guifg=LightGrey')
-vim.cmd("sign define DiagnosticSignError text=● texthl=DiagnosticSignError")
-vim.cmd("sign define DiagnosticSignWarn text=● texthl=DiagnosticSignWarn")
-vim.cmd("sign define DiagnosticSignInfo text=● texthl=DiagnosticSignInfo")
-vim.cmd("sign define DiagnosticSignHint text=● texthl=DiagnosticSignError")
+vim.cmd("sign define DiagnosticSignError text=E texthl=DiagnosticSignError")
+vim.cmd("sign define DiagnosticSignWarn text=W texthl=DiagnosticSignWarn")
+vim.cmd("sign define DiagnosticSignInfo text=I texthl=DiagnosticSignInfo")
+vim.cmd("sign define DiagnosticSignHint text=H texthl=DiagnosticSignError")
 
 -- Shortcuts
 vim.cmd("command! -nargs=* Make :call RunCommand('make -C ' . fnamemodify(findfile('Makefile', '.;'), ':p:h') . ' ' . <q-args>)")
