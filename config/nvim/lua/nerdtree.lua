@@ -1,6 +1,9 @@
 -- Open NERDTree by default
-vim.cmd 'autocmd VimEnter * NERDTree'
-vim.cmd 'autocmd VimEnter * wincmd w'
+if vim.g.gui then
+  vim.cmd 'autocmd VimEnter * NERDTree'
+  vim.cmd 'autocmd VimEnter * wincmd w'
+end
+
 vim.cmd 'autocmd FileType nerdtree setlocal signcolumn=no'
 
 vim.NERDTreeHighlightCursorline = 0

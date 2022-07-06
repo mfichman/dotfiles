@@ -25,11 +25,6 @@ vim.keymap.set('n', 'dr', ':diffget REMOTE<cr>', {silent = true})
 vim.keymap.set('n', 'db', ':diffget BASE<cr>', {silent = true})
 vim.keymap.set('n', 'dl', ':diffget LOCAL<cr>', {silent = true})
 
--- ALE
---vim.keymap.set('n', '<silent> <leader>en', ':ALENext<cr>')
---vim.keymap.set('n', '<silent> <leader>ep', ':ALEPrev<cr>')
---vim.keymap.set('n', '<a-cr>', ':ALEFix<cr>')
-
 -- Paste/delete without yanking!!
 vim.keymap.set('v', 'p', '"0p')
 vim.keymap.set('v', 'P', '"0P')

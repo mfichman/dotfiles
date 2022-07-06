@@ -1,8 +1,11 @@
-vim.g.airline_theme = 'base16'
-vim.g.airline_powerline_fonts = 1
+if vim.g.gui then
+  vim.g.airline_theme = 'base16'
+  vim.g.airline_powerline_fonts = 1
+  vim.g.airline_left_alt_sep = ""
+  vim.g.airline_right_alt_sep = ""
+end
+
 vim.g.airline_section_z = '%p%% %#__accent_bold#%{g:airline_symbols.linenr}%l/%L%#__restore__#:%02v'
-vim.g.airline_left_alt_sep = ""
-vim.g.airline_right_alt_sep = ""
 
 vim.g.airline_mode_map = {
     ['__']     = '-',
