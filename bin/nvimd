@@ -1,3 +1,3 @@
 #!/usr/bin/env sh
 
-watch -n1 nvim -u ~/.config/nvim/ginit.lua --headless --listen localhost:6666
+while true; do nvim -u ~/.config/nvim/ginit.lua --headless --listen localhost:6666; done

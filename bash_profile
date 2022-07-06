@@ -14,7 +14,7 @@ export PS1="❯ "
 export CLICOLOR=1
 
 # Default editor for git
-export EDITOR="nvim -d"
+export EDITOR="nvim"
 
 # Path for flutter
 #export PATH="$PATH:~/code/flutter/bin"

@@ -1,7 +1,7 @@
 [diff]
-	tool = gvimdiff
+	tool = nvim -d
 [merge]
-	tool = gvimdiff
+	tool = nvim -d
 [push]
 	default = current
 [core]
