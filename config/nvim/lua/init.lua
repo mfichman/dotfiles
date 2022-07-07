@@ -3,16 +3,12 @@ vim.cmd 'set rtp^=~/.vim'
 vim.g.netrw_slilent = 1
 vim.g.neovide_cursor_animation_length = 0.001
 
--- Colors
-if vim.g.gui then
-  vim.cmd('colorscheme github')
-else
-  vim.cmd('colorscheme molokai')
-end
-
 -- Font/rendering settings
---vim.opt.guifont = 'Source Code Pro for Powerline:h13'
-vim.opt.guifont = 'Source Code Pro for Powerline:h10'
+if vim.fn.has('macunix') and not vim.g.remote then
+  vim.opt.guifont = 'Source Code Pro for Powerline:h13'
+else
+  vim.opt.guifont = 'Source Code Pro for Powerline:h10'
+end
 
 -- Tabs/whitespace
 vim.opt.expandtab = true
@@ -41,15 +37,17 @@ vim.opt.wildignore = {'*.git' , '*.swp', '*.sw\\w'}
 -- Diagnostics
 if vim.g.gui then
   vim.opt.signcolumn = 'yes'
-  vim.cmd('hi SignColumn guibg=#ECECEC')
-  vim.cmd('hi DiagnosticSignError guibg=#ECECEC guifg=Red')
-  vim.cmd('hi DiagnosticSignWarn guibg=#ECECEC guifg=Orange')
-  vim.cmd('hi DiagnosticSignInfo guibg=#ECECEC guifg=LightBlue')
-  vim.cmd('hi DiagnosticSignHint guibg=#ECECEC guifg=LightGrey')
-  vim.cmd("sign define DiagnosticSignError text=● texthl=DiagnosticSignError")
-  vim.cmd("sign define DiagnosticSignWarn text=● texthl=DiagnosticSignWarn")
-  vim.cmd("sign define DiagnosticSignInfo text=● texthl=DiagnosticSignInfo")
-  vim.cmd("sign define DiagnosticSignHint text=● texthl=DiagnosticSignError")
+  vim.cmd("sign define DiagnosticSignError text=E texthl=DiagnosticSignError")
+  vim.cmd("sign define DiagnosticSignWarn text=W texthl=DiagnosticSignWarn")
+  vim.cmd("sign define DiagnosticSignInfo text=I texthl=DiagnosticSignInfo")
+  vim.cmd("sign define DiagnosticSignHint text=H texthl=DiagnosticSignHint")
+end
+
+-- Colors
+if vim.g.gui then
+  vim.cmd('colorscheme github')
+else
+  vim.cmd('colorscheme molokai')
 end
 
 -- Shortcuts

@@ -21,6 +21,11 @@ endif
 let g:colors_name="github"
 
 hi Normal       guifg=#000000 guibg=#F8F8FF
+hi SignColumn   guibg=#ECECEC
+hi DiagnosticSignError guibg=#ECECEC guifg=Red
+hi DiagnosticSignWarn guibg=#ECECEC guifg=Orange
+hi DiagnosticSignInfo guibg=#ECECEC guifg=LightBlue
+hi DiagnosticSignHint guibg=#ECECEC guifg=LightGrey
 
 " {{{ Cursor
 hi Cursor		guibg=#444454 guifg=#F8F8FF

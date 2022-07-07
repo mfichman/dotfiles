@@ -8,5 +8,6 @@
 -- except according to the terms contained in the LICENSE.md file.
 
 vim.g.gui = true
+vim.g.remote = true
 
 require 'init'
