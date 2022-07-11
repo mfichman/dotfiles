@@ -60,6 +60,7 @@ alias gss="git stack sync $GIT_STACK_UPSTREAM"
 alias gsr="git stack rebase $GIT_STACK_UPSTREAM"
 alias gsc="git stack clean $GIT_STACK_UPSTREAM"
 alias gsp="git stack push $GIT_STACK_UPSTREAM"
+alias gsl="git stack log"
 
 alias vim="nvim"
 
