@@ -2,6 +2,8 @@
     cmd = nvim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
 [difftool "nvim"]
     cmd = nvim -d
+[mergetool]
+    writeToTemp = true
 [diff]
 	tool = nvim 
 [merge]

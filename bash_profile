@@ -26,7 +26,7 @@ export PATH="$PATH:/Applications/MacVim.app/Contents/bin"
 #eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # Rust
-export PATH="$HOME/.cargo/bin:$PATH"
+. "$HOME/.cargo/env"
 
 # Python/pyenv/virtualenv
 #export VIRTUAL_ENV_DISABLE_PROMPT=1
@@ -63,4 +63,3 @@ alias gsp="git stack push $GIT_STACK_UPSTREAM"
 alias gsl="git stack log"
 
 alias vim="nvim"
-
