@@ -14,7 +14,7 @@ export PS1="❯ "
 export CLICOLOR=1
 
 # Default editor for git
-export EDITOR="gvim -f"
+export EDITOR="nvim"
 
 # Path for flutter
 #export PATH="$PATH:~/code/flutter/bin"
@@ -26,7 +26,7 @@ export PATH="$PATH:/Applications/MacVim.app/Contents/bin"
 #eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # Rust
-export PATH="$HOME/.cargo/bin:$PATH"
+. "$HOME/.cargo/env"
 
 # Python/pyenv/virtualenv
 #export VIRTUAL_ENV_DISABLE_PROMPT=1
@@ -60,6 +60,6 @@ alias gss="git stack sync $GIT_STACK_UPSTREAM"
 alias gsr="git stack rebase $GIT_STACK_UPSTREAM"
 alias gsc="git stack clean $GIT_STACK_UPSTREAM"
 alias gsp="git stack push $GIT_STACK_UPSTREAM"
+alias gsl="git stack log"
 
 alias vim="nvim"
-

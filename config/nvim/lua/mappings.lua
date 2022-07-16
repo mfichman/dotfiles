@@ -24,14 +24,12 @@ vim.keymap.set('n', '<c-p>', ':Fgl<cr>', {silent = true})
 vim.keymap.set('n', 'dr', ':diffget REMOTE<cr>', {silent = true})
 vim.keymap.set('n', 'db', ':diffget BASE<cr>', {silent = true})
 vim.keymap.set('n', 'dl', ':diffget LOCAL<cr>', {silent = true})
-
--- ALE
---vim.keymap.set('n', '<silent> <leader>en', ':ALENext<cr>')
---vim.keymap.set('n', '<silent> <leader>ep', ':ALEPrev<cr>')
---vim.keymap.set('n', '<a-cr>', ':ALEFix<cr>')
+vim.keymap.set('n', 'dn', ':/<<<<<<<<cr>', {silent = true})
+vim.keymap.set('n', 'dp', ':?<<<<<<<<cr>', {silent = true})
 
 -- Paste/delete without yanking!!
 vim.keymap.set('v', 'p', '"0p')
 vim.keymap.set('v', 'P', '"0P')
 vim.keymap.set('v', 'y', '"0y')
 vim.keymap.set('v', 'd', '"0d')
+

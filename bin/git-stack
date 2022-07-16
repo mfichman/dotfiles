@@ -7,7 +7,6 @@ require 'json'
 def system(command, exception: true, silent: false)
   $stdout.puts(command) unless silent
   super(command, exception: exception)
-  $stdout.puts unless silent
 end
 
 def user
@@ -21,27 +20,27 @@ def upstream
 end
 
 def git_stack_sync_commit(commit, branches)
-  main = `git branch --show-current`
-  branch = `git notes show #{commit} 2> /dev/null`.strip
+  targets = `git notes show #{commit} 2> /dev/null`.strip.split(',')
 
   return unless $?.success?
 
-  if branches.include?(branch)
-    system("git checkout #{branch}", exception: true)
-  else
-    system("git checkout #{upstream} -fB #{branch}", exception: true)
-    branches << branch
-  end
+  targets.each do |target|
+    if branches.include?(target)
+      system("git checkout -q #{target}", exception: true)
+    else
+      system("git checkout -q #{upstream} -fB #{target}", exception: true)
+      branches << target
+    end
 
-  system("git cherry-pick #{commit}", exception: true)
-  system("git checkout #{main}", exception: true)
+    system("git cherry-pick #{commit}", exception: true)
+  end
 end
 
 def git_stack_sync
   commits = `git log --pretty=format:"%h" #{upstream}..#{user}/main`
 
-  system("git stash", exception: true)
-  system("git checkout #{user}/main", exception: true)
+  system("git stash push -q", exception: true)
+  system("git checkout -q #{user}/main", exception: true)
 
   branches = []
 
@@ -49,16 +48,30 @@ def git_stack_sync
     git_stack_sync_commit(commit, branches)
   end
 
+  branches += JSON.parse(File.read("#{ENV['HOME']}/.git-stack-branches")) rescue []
+
+  system("git checkout -q #{user}/main", exception: true)
+
+  branches = branches.uniq
+
   File.write("#{ENV['HOME']}/.git-stack-branches", branches.to_json)
 end
 
 def git_stack_rebase
+  system("git stash push -q", exception: true)
+  system("git checkout -q #{user}/main", exception: true)
   system("git fetch #{upstream.split('/').join(' ')}", exception: true)
   system("git rebase -i #{upstream} --autosquash", exception: true)
 end
 
 def git_stack_push_branch(branch)
-  system("git push -fu origin #{branch}", exception: true)
+  diff = `git diff origin/#{branch}..#{branch} 2> /dev/null`
+
+  if $?.success? && diff.empty?
+    puts "No changes for #{branch}"
+  else
+    system("git push -fu origin #{branch}", exception: true)
+  end
 end
 
 def git_stack_push
@@ -76,11 +89,11 @@ end
 def git_stack_clean
   commits = `git log --pretty=format:"%h" #{upstream}..#{user}/main`
 
-  branches = File.open("#{ENV['HOME']}/.git-stack-branches") do |fd|
+  all_branches = File.open("#{ENV['HOME']}/.git-stack-branches") do |fd|
     JSON.load(fd)
   end
 
-  branches.select! do |branch|
+  branches = all_branches.select do |branch|
     `git rev-parse --verify #{branch} 2> /dev/null`
     $?.success?
   end
@@ -104,6 +117,13 @@ def git_stack_clean
   branches.each do |branch|
     system("git branch -D #{branch}", exception: true, silent: true)
   end
+
+  File.write("#{ENV['HOME']}/.git-stack-branches", (all_branches - branches).to_json)
+end
+
+def git_stack_log
+  format = '%C(brightblue)%h %C(brightcyan)%as%C(brightyellow)% N%C(reset) %s %C(brightred)(%al)%d' 
+  system("git log --date=relative --color=always -z --pretty=format:'#{format}' | tr -d '\n' | tr '\\0' '\n' | less -REXS")
 end
 
 def main
@@ -118,6 +138,8 @@ def main
     git_stack_push
   when 'clean'
     git_stack_clean
+  when 'log'
+    git_stack_log
   else
     raise ArgumentError, "usage: git stack sync|rebase|push"
   end
@@ -126,4 +148,3 @@ rescue => e
 end
 
 main
-
