@@ -5,6 +5,8 @@ if vim.g.gui then
   --vim.g.airline_right_alt_sep = ""
 end
 
+vim.g.airline_powerline_fonts = 0
+
 vim.g.airline_section_z = '%p%% %#__accent_bold#%{g:airline_symbols.linenr}%l/%L%#__restore__#:%02v'
 
 vim.g.airline_mode_map = {
@@ -28,7 +30,6 @@ vim.g.airline_mode_map = {
     ['']     = 'VISUAL',
 }
 
---[[
 vim.g.airline_symbols = {
   maxlinenr = ' ',
   spell =  '',
@@ -39,4 +40,3 @@ vim.g.airline_symbols = {
   linenr =  '',
   whitespace =  '',
 }
-]]

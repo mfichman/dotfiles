@@ -41,11 +41,11 @@ local function setup(name, settings)
   -- Disable snippets
   --local cmp_nvim_lsp = require('cmp_nvim_lsp')
   --local capabilities = cmp_nvim_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
+  --settings.capabilities = capabilities
 
   local settings = settings or {}
 
   settings.on_attach = on_attach
-  --settings.capabilities = capabilities
 
   lspconfig[name].setup(settings)
 end
@@ -55,3 +55,24 @@ setup('eslint')
 setup('clangd')
 setup('tsserver')
 setup('jedi_language_server')
+setup('jsonls')
+setup('efm', {
+  settings = {
+    --version = 2,
+    --logLevel = 1,
+    --lintDebounce = '1s',
+    rootMarkers = {".git/"},
+    languages = {
+      go = {
+        {
+          lintCommand = "golint", 
+          lintStdin = false, 
+          lintFormats={'%f:%l:%c: %m'}, 
+          lintIgnoreExitCode = true, 
+          lintSeverity = 2
+        }
+      }
+    },
+  },
+  filetypes = {'go'}
+})

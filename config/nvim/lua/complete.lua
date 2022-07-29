@@ -36,7 +36,8 @@ end
 
 local function complete_confirm(fallback)
   if cmp.visible() then
-    cmp.confirm({select = true})
+    cmp.complete_common_string()
+    --cmp.confirm({select = true})
   --elseif vim.fn["vsnip#available"](1) == 1 then
   ----  feedkey("<Plug>(vsnip-expand-or-jump)", "")
   else
@@ -44,18 +45,22 @@ local function complete_confirm(fallback)
   end
 end
 
-cmp.setup{
+cmp.setup {
+  window = {
+    documentation = cmp.config.window.bordered()
+  },
+
   snippet = {
     expand = function(args)
       vim.fn['vsnip#anonymous'](args.body)
     end
   },
 
-  sources = cmp.config.sources({
-    {name = 'nvim_lsp'}
-  }, {
-    {name = 'buffer'}
-  }),
+  sources = {
+    {name = 'nvim_lsp'},
+    {name = 'buffer'},
+    {name = 'vsnip'},
+  },
 
   mapping = {
     ['<c-j>'] = cmp.mapping(complete_next, {'i', 's'}),
