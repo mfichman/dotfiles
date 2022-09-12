@@ -34,12 +34,24 @@ local function complete_prev(fallback)
   end
 end
 
+local function complete_tab(fallback)
+  local entries = table.getn(cmp.get_entries())
+  if entries == 1 then
+    cmp.confirm({select = true})
+  elseif cmp.visible() then
+    if not cmp.complete_common_string() then
+      cmp.select_next_item()
+    end
+  elseif vim.fn["vsnip#available"](1) == 1 then
+    feedkey("<Plug>(vsnip-expand-or-jump)", "")
+  else
+    fallback()
+  end
+end
+
 local function complete_confirm(fallback)
   if cmp.visible() then
-    cmp.complete_common_string()
-    --cmp.confirm({select = true})
-  --elseif vim.fn["vsnip#available"](1) == 1 then
-  ----  feedkey("<Plug>(vsnip-expand-or-jump)", "")
+    cmp.confirm({select = true})
   else
     fallback()
   end
@@ -65,9 +77,8 @@ cmp.setup {
   mapping = {
     ['<c-j>'] = cmp.mapping(complete_next, {'i', 's'}),
     ['<c-k>'] = cmp.mapping(complete_prev, {'i', 's'}),
-    ['<tab>'] = cmp.mapping(complete_confirm, {'i', 's'}),
-    --['<tab>'] = cmp.mapping(complete_snip_next, {'i', 's'}),
-    --['<s-tab>'] = cmp.mapping(complete_snip_prev, {'i', 's'}),
-    --['<cr>'] = cmp.mapping.confirm({select = true}),
+    ['<tab>'] = cmp.mapping(complete_tab, {'i', 's'}),
+    ['<enter>'] = cmp.mapping(complete_confirm, {'i', 's'}),
+    ['<s-tab>'] = cmp.mapping(complete_prev, {'i', 's'}),
   }
 }

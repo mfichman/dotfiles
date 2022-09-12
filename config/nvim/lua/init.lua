@@ -35,19 +35,30 @@ vim.opt.fileencoding = 'utf-8'
 vim.opt.wildignore = {'*.git' , '*.swp', '*.sw\\w'}
 
 -- Diagnostics
+vim.opt.signcolumn = 'yes'
+
+-- Clipboard
+--vim.opt.clipboard = 'unnamedplus'
+
 if vim.g.gui then
-  vim.opt.signcolumn = 'yes'
-  vim.cmd("sign define DiagnosticSignError text=E texthl=DiagnosticSignError")
-  vim.cmd("sign define DiagnosticSignWarn text=W texthl=DiagnosticSignWarn")
-  vim.cmd("sign define DiagnosticSignInfo text=I texthl=DiagnosticSignInfo")
-  vim.cmd("sign define DiagnosticSignHint text=H texthl=DiagnosticSignHint")
+  vim.cmd("sign define DiagnosticSignError text=E texthl=DiagnosticSignError linehl= numhl=")
+  vim.cmd("sign define DiagnosticSignWarn text=W texthl=DiagnosticSignWarn linehl= numhl=")
+  vim.cmd("sign define DiagnosticSignInfo text=I texthl=DiagnosticSignInfo linehl= numhl=")
+  vim.cmd("sign define DiagnosticSignHint text=H texthl=DiagnosticSignHint linehl= numhl=")
 end
+
+vim.diagnostic.config { severity_sort = true }
 
 -- Colors
 if vim.g.gui then
   vim.cmd('colorscheme github')
 else
   vim.cmd('colorscheme molokai')
+  vim.cmd('hi DiagnosticSignError ctermfg=1 guifg=red ctermbg=235 guibg=#232526')
+  vim.cmd('hi DiagnosticSignWarn ctermfg=3 guifg=orange ctermbg=235 guibg=#232526')
+  vim.cmd('hi DiagnosticSignInfo ctermfg=4 guifg=lightblue ctermbg=235 guibg=#232526')
+  vim.cmd('hi DiagnosticSignHint ctermfg=7 guifg=grey ctermbg=235 guibg=#232526')
+  vim.cmd('hi Pmenu ctermfg=81 ctermbg=235 guifg=#66D9EF guibg=#232526')
 end
 
 -- Shortcuts

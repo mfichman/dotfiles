@@ -38,13 +38,12 @@ local function on_attach(client, bufnr)
 end
 
 local function setup(name, settings)
-  -- Disable snippets
-  --local cmp_nvim_lsp = require('cmp_nvim_lsp')
-  --local capabilities = cmp_nvim_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
-  --settings.capabilities = capabilities
-
   local settings = settings or {}
 
+  local cmp_nvim_lsp = require('cmp_nvim_lsp')
+  local capabilities = cmp_nvim_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
+
+  settings.capabilities = capabilities
   settings.on_attach = on_attach
 
   lspconfig[name].setup(settings)
@@ -56,6 +55,7 @@ setup('clangd')
 setup('tsserver')
 setup('jedi_language_server')
 setup('jsonls')
+setup('java_language_server', {cmd = {"/Users/Matt/java-language-server/dist/lang_server_mac.sh"}})
 setup('efm', {
   settings = {
     --version = 2,

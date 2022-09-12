@@ -1,4 +1,6 @@
 
+setopt share_history
+
 # Set up terminal
 function __ps1_newline_login {
   if [[ -z "${PS1_NEWLINE_LOGIN}" ]]; then
@@ -15,15 +17,11 @@ export CLICOLOR=1
 
 # Default editor for git
 export EDITOR="nvim"
+alias vim="nvim"
+export PATH="$PATH:/Applications/MacVim.app/Contents/bin" # MacVim
 
 # Path for flutter
 #export PATH="$PATH:~/code/flutter/bin"
-
-# MacVim
-export PATH="$PATH:/Applications/MacVim.app/Contents/bin"
-
-# Homebrew
-#eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # Rust
 . "$HOME/.cargo/env"
@@ -32,7 +30,7 @@ export PATH="$PATH:/Applications/MacVim.app/Contents/bin"
 #export VIRTUAL_ENV_DISABLE_PROMPT=1
 #source ~/Code/venv3/bin/activate
 eval "$(pyenv init -)"
-export PATH="$(pyenv root)/shims:/usr/local/sbin:$PATH"
+export PATH="$PATH:$(pyenv root)/shims:/usr/local/sbin"
 
 # Node
 eval "$(nodenv init -)"
@@ -47,6 +45,12 @@ export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig
 # Other
 export PATH="$PATH:$HOME/bin"
 export PATH="$HOME/.bin:$PATH"
+
+# Homebrew
+source $HOME/.sh/homebrew
+
+# Go
+source $HOME/.sh/go
 
 # Aliases
 alias less='less -R'

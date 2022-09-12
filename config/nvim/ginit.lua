@@ -11,3 +11,9 @@ vim.g.gui = true
 vim.g.remote = true
 
 require 'init'
+
+-- Workaround for broken clipboard with neovide
+vim.api.nvim_create_autocmd('BufEnter', {
+  pattern = '*',
+  command = 'call provider#clipboard#Executable()',
+})
