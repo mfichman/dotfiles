@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+# Switches between ARM64 (native M1 Mac tools) and x86-64 Golang tools.
+
+ARCH=$(arch)
+
+export GOVERSION=${GOVERSION:-1.18.3}
+
+case "$ARCH" in
+    arm64)
+        export GOPATH=$HOME/go/$GOVERSION/arm64
+        ;;
+    i386)
+        export GOPATH=$HOME/go/$GOVERSION/i386
+        ;;
+    *)
+        echo "Invalid architecture (valid options: arm64, i386)" 1>&2
+        exit 1
+        ;;
+esac
+
+export GOVERSION=${GOVERSION:-1.18.3}
+export GOPATH="$HOME/go/$GOVERSION/$ARCH"
+export PATH="$PATH:$GOPATH/bin"
+export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig

@@ -5,3 +5,4 @@ vim/.netrwhist
 .*
 *.orig
 config/nvim/plugin
+sh

@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+# Switches between ARM64 (native M1 Mac tools) and x86-64 tools.
+
+ARCH=$(arch)
+
+export GOVERSION=${GOVERSION:-1.18.3}
+
+case "$ARCH" in
+    arm64)
+        alias brew="/opt/homebrew/bin/brew"
+        ;;
+    x86_64|i386)
+        ;;
+    *)
+        echo "Invalid architecture (valid options: arm64, x86_64/i386)" 1>&2
+        exit 1
+        ;;
+esac
+
+eval "$(brew shellenv)"
