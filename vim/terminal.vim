@@ -14,3 +14,20 @@ function! RunCommand(cmd)
     call win_execute(g:terminal_window_id, "terminal! " . a:cmd)
     call win_gotoid(window_id)
 endfunction
+
+function! RunTestFile()
+    if &filetype ==# 'go'
+        execute 'Go test -v ' . fnamemodify(expand('%'), ':p:h')
+    else
+    end
+endfunction
+
+function! RunTest()
+    if &filetype ==# 'go'
+        "execute 'Go test -v ' . fnamemodify(expand('%'), ':p:h') . ' -check.v -check.f ^' . expand('<cword>') . '$'
+        execute 'Make run-test TEST_NAME='. expand('<cword>')
+        "command! -nargs=* Make :call RunCommand('make -C ' . fnamemodify(findfile("Makefile", ".;"), ':p:h') . ' ' . <q-args>)
+    else
+    end
+endfunction
+

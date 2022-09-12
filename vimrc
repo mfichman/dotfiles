@@ -106,12 +106,16 @@ endif
 "set foldnestmax=1
 "set foldlevel=0
 "set foldenable
+"
+" Build recursive
+command! -nargs=* Make :call RunCommand('make -C ' . fnamemodify(findfile("Makefile", ".;"), ':p:h') . ' ' . <q-args>)
+command! -nargs=* GoBuild :call RunCommand('cd ' . fnamemodify(findfile("go.mod", ".;"), ':p:h') . ' && go build -x')
+command! -nargs=* GoTest :call RunCommand('cd ' . fnamemodify(findfile("go.mod", ".;"), ':p:h') . ' && go test -x')
+command! -nargs=* Go :call RunCommand('cd ' . fnamemodify(findfile("go.mod", ".;"), ':p:h') . ' && go ' . <q-args>)
+
 
 " Tab formatting options
 filetype plugin indent on
-
-" Build recursive
-command! -nargs=* Make execute '!make -C ' . fnamemodify(findfile("Makefile", ".;"), ':p:h') . ' ' . <f-args>
 
 source ~/.vim/airline.vim
 source ~/.vim/ale.vim

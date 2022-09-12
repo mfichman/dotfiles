@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+cd $IB_HOME && python provisioner.py "$@"

@@ -14,7 +14,7 @@
 	excludesfile = /Users/matt/.gitignore
 [user]
 	name = Matt Fichman
-	email = matt.fichman@gmail.com
+	email = matt.fichman@instabase.com
 [alias]
 	amend = commit --amend --no-edit
 	rl = reflog --date=relative

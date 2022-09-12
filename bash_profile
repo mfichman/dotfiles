@@ -36,6 +36,12 @@ source $HOME/.sh/homebrew
 # Go
 source $HOME/.sh/go
 
+# Instabase database setup
+source $HOME/.sh/db
+
+# Instabase database setup
+source $HOME/.sh/instabase
+
 # Aliases
 alias less='less -R'
 alias vim='nvim'

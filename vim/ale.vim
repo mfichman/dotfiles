@@ -30,7 +30,7 @@ let g:ale_linters['cpp'] = ['clangd']
 let g:ale_linters['c'] = ['clangd']
 let g:ale_linters['python'] = ['jedils', 'mypy']
 let g:ale_linters['thrift'] = ['thrift']
-let g:ale_linters['go'] = ['gopls'] 
+let g:ale_linters['go'] = ['gopls', 'golint'] 
 
 if !exists("g:ale_fixers")
     let g:ale_fixers = {}
