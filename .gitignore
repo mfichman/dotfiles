@@ -1,6 +1,7 @@
 vim/plugged
 vim/bundle
 vim/.netrwhist
+sh/instabase
 *.swp
 .*
 *.orig
