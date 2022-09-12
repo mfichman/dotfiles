@@ -16,6 +16,7 @@ export PS1="❯ "
 export CLICOLOR=1
 
 # Default editor for git
+export PATH="$PATH:/Applications/MacVim.app/Contents/bin" # MacVim
 export EDITOR="nvim"
 alias vim="nvim"
 export PATH="$PATH:/Applications/MacVim.app/Contents/bin" # MacVim
@@ -31,14 +32,15 @@ export PATH="$PATH:/Applications/MacVim.app/Contents/bin" # MacVim
 #source ~/Code/venv3/bin/activate
 eval "$(pyenv init -)"
 export PATH="$PATH:$(pyenv root)/shims:/usr/local/sbin"
+export PYTHONPATH="$PYTHONPATH;./build/py"
 
 # Node
 eval "$(nodenv init -)"
 
 # Go
-export GOPATH="$HOME/Code/go"
-export PATH=$PATH:/usr/local/opt/go/libexec/bin
-export PATH="/usr/local/go/bin:$PATH"
+export GOVERSION=${GOVERSION:-1.18.3}
+export GO111MODULE=on
+export GOPATH="$HOME/go/$GOVERSION/$(arch)"
 export PATH="$GOPATH/bin:$PATH"
 export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig
 

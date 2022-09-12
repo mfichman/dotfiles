@@ -115,9 +115,9 @@ command! -nargs=* Make execute '!make -C ' . fnamemodify(findfile("Makefile", ".
 
 source ~/.vim/airline.vim
 source ~/.vim/ale.vim
-"source ~/.vim/coc.vim
 source ~/.vim/fzf.vim
 source ~/.vim/terminal.vim
 source ~/.vim/nerdtree.vim
 source ~/.vim/mappings.vim
 source ~/.vim/deoplete.vim
+

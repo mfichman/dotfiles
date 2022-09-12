@@ -126,6 +126,11 @@ def git_stack_log
   system("git log --date=relative --color=always -z --pretty=format:'#{format}' | tr -d '\n' | tr '\\0' '\n' | less -REXS")
 end
 
+def git_stack_log
+  format = '%C(brightblue)%h %C(brightcyan)%as%C(brightyellow)% N%C(reset) %s %C(brightred)(%al)%d' 
+  system("git log --date=relative --color=always -z --pretty=format:'#{format}' | tr -d '\n' | tr '\\0' '\n' | less -REXS")
+end
+
 def main
   command = ARGV.shift
 
