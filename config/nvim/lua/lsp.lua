@@ -1,7 +1,7 @@
 local lspconfig = require('lspconfig')
 
 -- Autoformat
-vim.cmd "autocmd BufWritePre * lua vim.lsp.buf.formatting_sync()"
+vim.cmd "autocmd BufWritePre *.{jsx,tsx,js,ts,cpp,hpp,c,h,go} lua vim.lsp.buf.format()"
 
 -- Mappings.
 local opts = { noremap=true, silent=true }
@@ -34,7 +34,7 @@ local function on_attach(client, bufnr)
   vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
   vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
   vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
-  vim.keymap.set('n', '<space>f', vim.lsp.buf.formatting, bufopts)
+  vim.keymap.set('n', '<space>f', vim.lsp.buf.format, bufopts)
 end
 
 local function setup(name, settings)
@@ -51,9 +51,17 @@ end
 
 setup('gopls')
 setup('eslint')
-setup('clangd')
+setup('clangd', {filetypes = {'c', 'cpp', 'cuda', 'objc', 'objcpp'}})
 setup('tsserver')
-setup('jedi_language_server')
+setup('jedi_language_server', {
+  init_options = {
+    workspace = {
+      extraPaths = {
+        './build/py'
+      }
+    }
+  }
+})
 setup('jsonls')
 setup('java_language_server', {cmd = {"/Users/Matt/java-language-server/dist/lang_server_mac.sh"}})
 setup('efm', {

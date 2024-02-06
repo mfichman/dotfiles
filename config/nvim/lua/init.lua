@@ -1,11 +1,13 @@
 vim.cmd 'set rtp^=~/.vim'
+vim.cmd 'set t_ut='
 
 vim.g.netrw_slilent = 1
 vim.g.neovide_cursor_animation_length = 0.001
 
 -- Font/rendering settings
+vim.cmd('hi Comment gui=none cterm=none')
 if vim.fn.has('macunix') == 1 and not vim.g.remote then
-  vim.opt.guifont = 'Source Code Pro for Powerline:h13'
+  vim.opt.guifont = 'Source Code Pro for Powerline:h12'
 else
   vim.opt.guifont = 'Source Code Pro for Powerline:h10'
 end
@@ -62,6 +64,7 @@ else
 end
 
 -- Shortcuts
+vim.cmd("command! -nargs=* Bazel :call RunCommand('bazel ' . <q-args> . ' //' . fnamemodify(findfile('BUILD.bazel', '.;'), ':.:h') . '/...')")
 vim.cmd("command! -nargs=* Make :call RunCommand('make -C ' . fnamemodify(findfile('Makefile', '.;'), ':p:h') . ' ' . <q-args>)")
 vim.cmd("command! -nargs=* GoBuild :call RunCommand('cd ' . fnamemodify(findfile('go.mod', '.;'), ':p:h') . ' && go build -x')")
 vim.cmd("command! -nargs=* GoTest :call RunCommand('cd ' . fnamemodify(findfile('go.mod', '.;'), ':p:h') . ' && go test -x')")
@@ -76,3 +79,4 @@ require 'fzf'
 require 'skeleton'
 require 'nerdtree'
 require 'complete'
+require 'dict'

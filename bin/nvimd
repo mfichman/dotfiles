@@ -7,7 +7,8 @@ nvim="nvim -u $HOME/.config/nvim/ginit.lua -S ~/.session.nvim --headless --embed
 
 cd $IB_HOME
 
-$(which ssh) -N -R127.0.0.1:2222:localhost:2222 -R127.0.0.1:6666:localhost:6666 matt-pc.local &
+# See .ssh/config
+$(which autossh) -M0 -vv -N matt-pc.local &
 $(which sshd) -D -p 2222 -h ~/.ssh/id_rsa -f ~/.sshd_config &
 $(which socat) TCP-LISTEN:6666,fork,reuseaddr,bind=127.0.0.1 EXEC:"$nvim" &
 

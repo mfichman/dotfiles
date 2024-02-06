@@ -6,6 +6,6 @@ end
 
 vim.cmd 'autocmd FileType nerdtree setlocal signcolumn=no'
 
-vim.NERDTreeHighlightCursorline = 0
-vim.NERDTreeShowHidden = 1
-vim.NERDTreeIgnore = {'^\\.git$', '\\.swp$'}
+vim.g.NERDTreeHighlightCursorline = 0
+vim.g.NERDTreeShowHidden = 1
+vim.g.NERDTreeIgnore = {'^\\.git$', '\\.swp$'}
