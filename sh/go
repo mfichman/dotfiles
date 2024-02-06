@@ -4,14 +4,14 @@
 
 ARCH=$(arch)
 
-export GOVERSION=${GOVERSION:-1.18.3}
+export GOVERSION=${GOVERSION:-1.18.10}
 
 case "$ARCH" in
     arm64)
-        export GOPATH=$HOME/go/$GOVERSION/arm64
+        export GOPATH=$HOME/Code/go/$GOVERSION/arm64
         ;;
     i386)
-        export GOPATH=$HOME/go/$GOVERSION/i386
+        export GOPATH=$HOME/Code/go/$GOVERSION/i386
         ;;
     *)
         echo "Invalid architecture (valid options: arm64, i386)" 1>&2
@@ -19,7 +19,6 @@ case "$ARCH" in
         ;;
 esac
 
-export GOVERSION=${GOVERSION:-1.18.3}
-export GOPATH="$HOME/go/$GOVERSION/$ARCH"
-export PATH="$PATH:$GOPATH/bin"
+export PATH="$GOPATH/bin:$PATH"
+echo $PATH
 export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig

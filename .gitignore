@@ -1,9 +1,11 @@
-vim/plugged
-vim/bundle
-vim/.netrwhist
-sh/instabase
+*.orig
 *.swp
 .*
-*.orig
+bin/sql
 config/nvim/plugin
+config/secrets
 sh
+sh/instabase
+vim/.netrwhist
+vim/bundle
+vim/plugged

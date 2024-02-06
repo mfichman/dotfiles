@@ -4,8 +4,6 @@
 
 ARCH=$(arch)
 
-export GOVERSION=${GOVERSION:-1.18.3}
-
 case "$ARCH" in
     arm64)
         alias brew="/opt/homebrew/bin/brew"

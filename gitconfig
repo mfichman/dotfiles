@@ -23,3 +23,7 @@
 	rewriteMode = cat_sort_uniq
 [rebase]
 	instructionFormat = (%an %ae) %s
+[safe]
+	directory = /Users/Matt/Code/instabase
+[url "git@github.com:"]
+	insteadOf = https://github.com/
