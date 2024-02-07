@@ -2,5 +2,5 @@
 
 mkdir -p ~/.config
 
-find * -maxdepth 0 | grep -v config | xargs -n1 -I% ln -snf $(pwd)/% ~/.%
-find config -mindepth 1 -maxdepth 1 | xargs -n1 -I% ln -snf $(pwd)/% ~/.%
+find * -maxdepth 0 | grep -v config | xargs -I% ln -snf $(pwd)/% ~/.%
+find config -mindepth 1 -maxdepth 1 | xargs -I% ln -snf $(pwd)/% ~/.%
