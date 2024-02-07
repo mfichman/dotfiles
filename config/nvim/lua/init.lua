@@ -22,11 +22,13 @@ vim.opt.shiftwidth = 4
 vim.opt.backspace = '2'
 vim.opt.encoding = 'utf-8'
 vim.opt.fileencoding = 'utf-8'
-vim.opt.guioptions = ''
 vim.opt.bomb = false
 vim.opt.wrap = false
 vim.opt.number = true
 vim.opt.ruler = true
+if vim.g.gui then
+  vim.opt.guioptions = ''
+end
 
 -- Encoding options
 vim.scriptencoding = 'utf-8'

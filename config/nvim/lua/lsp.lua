@@ -41,7 +41,7 @@ local function setup(name, settings)
   local settings = settings or {}
 
   local cmp_nvim_lsp = require('cmp_nvim_lsp')
-  local capabilities = cmp_nvim_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
+  local capabilities = cmp_nvim_lsp.default_capabilities() 
 
   settings.capabilities = capabilities
   settings.on_attach = on_attach

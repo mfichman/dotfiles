@@ -10,6 +10,9 @@ case "$ARCH" in
     arm64)
         export GOPATH=$HOME/go/$GOVERSION/arm64
         ;;
+    x86_64)
+        export GOPATH=$HOME/Code/go/$GOVERSION/arm64
+        ;;
     i386)
         export GOPATH=$HOME/go/$GOVERSION/i386
         ;;
