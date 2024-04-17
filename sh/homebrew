@@ -2,9 +2,10 @@
 
 # Switches between ARM64 (native M1 Mac tools) and x86-64 tools.
 
-ARCH=$(arch)
+alias brew-arm="arch -arch arm64 /opt/homebrew/bin/brew"
+alias brew-x86="arch -arch x86_64 /usr/local/bin/brew"
 
-export GOVERSION=${GOVERSION:-1.18.3}
+ARCH=$(arch)
 
 case "$ARCH" in
     arm64)

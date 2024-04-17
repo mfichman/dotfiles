@@ -1,5 +1,5 @@
-
 setopt share_history
+
 # Locale options
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
@@ -21,8 +21,11 @@ alias vim="nvim"
 # Homebrew
 #source $HOME/.sh/homebrew
 
-# Go
-source $HOME/.sh/go
+# Additional config
+source $HOME/.sh/*
+
+# Other
+export PATH="$PATH:$HOME/bin"
 
 # Aliases
 alias less='less -R'
@@ -37,4 +40,4 @@ alias gsc="git stack clean $GIT_STACK_UPSTREAM"
 alias gsp="git stack push $GIT_STACK_UPSTREAM"
 alias gsl="git stack log"
 
-export CRAFTING_SANDBOX_SERVER_URL=https://instabase.sandboxes.site
+source ~/.config/secrets
