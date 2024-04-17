@@ -6,7 +6,7 @@ vim.g.neovide_cursor_animation_length = 0.001
 
 -- Font/rendering settings
 vim.cmd('hi Comment gui=none cterm=none')
-if vim.fn.has('macunix') == 1 and not vim.g.remote then
+if vim.fn.has('macunix') == 1 then
   vim.opt.guifont = 'Source Code Pro for Powerline:h12'
 else
   vim.opt.guifont = 'Source Code Pro for Powerline:h10'

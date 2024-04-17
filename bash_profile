@@ -4,7 +4,8 @@ setopt share_history
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
-export PS1="$(hostname | tr '[:lower:]' '[:upper:]')❯ "
+#export PS1="$(hostname | tr '[:lower:]' '[:upper:]')❯ "
+export PS1="❯ "
 export CLICOLOR=1
 
 # Default editor for git
@@ -22,10 +23,10 @@ alias vim="nvim"
 #source $HOME/.sh/homebrew
 
 # Additional config
-source $HOME/.sh/*
+for f in $HOME/.sh/*; do source $f; done
 
 # Other
-export PATH="$PATH:$HOME/bin"
+export PATH="$PATH:$HOME/.bin"
 
 # Aliases
 alias less='less -R'
