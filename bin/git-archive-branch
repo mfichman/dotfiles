@@ -1,0 +1,12 @@
+#!/usr/bin/env bash 
+
+set -e
+
+export BRANCH=$1
+
+export DATE=$(git log --date=format:"%Y-%m-%d" --format="%cd" -1 $BRANCH)
+
+git tag archive/$DATE/$BRANCH $BRANCH
+git branch -D $BRANCH
+
+

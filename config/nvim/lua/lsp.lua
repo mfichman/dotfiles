@@ -49,7 +49,14 @@ local function setup(name, settings)
   lspconfig[name].setup(settings)
 end
 
-setup('gopls')
+setup('gopls', {
+  directoryFilters = {
+    '-bazel-bin',
+    '-bazel-out',
+    '-bazel-testlogs',
+    '-bazel-mypkg',
+  },
+})
 setup('eslint')
 setup('clangd', {filetypes = {'c', 'cpp', 'cuda', 'objc', 'objcpp'}})
 setup('tsserver')

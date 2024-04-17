@@ -1,0 +1,13 @@
+#!/usr/bin/env bash 
+
+set -e
+
+export TAG=$1
+
+export DATE=$(git log --date=format:"%Y-%m-%d" --format="%cd" -1 $TAG)
+export NEWTAG=$(echo $TAG | sed 's|^archive/||')
+
+git tag archive/$DATE/$NEWTAG $TAG
+git tag -d $TAG
+
+
