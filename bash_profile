@@ -1,22 +1,8 @@
-
-setopt share_history
-
-# Set up terminal
-function __ps1_newline_login {
-  if [[ -z "${PS1_NEWLINE_LOGIN}" ]]; then
-    PS1_NEWLINE_LOGIN=true
-  else
-    printf '\n'
-  fi
-}
-
-PROMPT_COMMAND="__ps1_newline_login; $PROMPT_COMMAND"
-
 # Locale options
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
-export PS1="❯ "
+export PS1="$(hostname | tr '[:lower:]' '[:upper:]')❯ "
 export CLICOLOR=1
 
 # Default editor for git
@@ -28,10 +14,10 @@ alias vim="nvim"
 #export PATH="$PATH:~/code/flutter/bin"
 
 # Rust
-. "$HOME/.cargo/env"
+#source "$HOME/.cargo/env" 
 
 # Homebrew
-source $HOME/.sh/homebrew
+#source $HOME/.sh/homebrew
 
 # Go
 source $HOME/.sh/go
@@ -48,3 +34,5 @@ alias gsr="git stack rebase $GIT_STACK_UPSTREAM"
 alias gsc="git stack clean $GIT_STACK_UPSTREAM"
 alias gsp="git stack push $GIT_STACK_UPSTREAM"
 alias gsl="git stack log"
+
+export CRAFTING_SANDBOX_SERVER_URL=https://instabase.sandboxes.site
