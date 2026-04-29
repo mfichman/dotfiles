@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import json
-import shutil
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -181,30 +181,26 @@ def page(data):
         sys.stdout.buffer.write(data)
         return
 
-    rows = shutil.get_terminal_size((80, 24)).lines
-    lines = data.splitlines(keepends=True)
-
-    if len(lines) <= rows:
+    pager, ok = capture("git var GIT_PAGER")
+    pager = pager.strip()
+    if not ok or not pager or pager == "cat":
         sys.stdout.buffer.write(data)
         return
 
-    chunk = max(rows - 1, 1)
-    i = 0
-    while i < len(lines):
-        sys.stdout.buffer.write(b"".join(lines[i:i + chunk]))
-        sys.stdout.buffer.flush()
-        i += chunk
-        if i >= len(lines):
-            return
-        sys.stdout.write(":")
-        sys.stdout.flush()
-        try:
-            reply = input()
-        except (EOFError, KeyboardInterrupt):
-            sys.stdout.write("\n")
-            return
-        if reply.strip().lower() in ("q", "quit"):
-            return
+    env = os.environ.copy()
+    env.setdefault("LESS", "FRX")
+    env.setdefault("LV", "-c")
+
+    try:
+        proc = subprocess.Popen(pager, shell=True, stdin=subprocess.PIPE, env=env)
+    except OSError:
+        sys.stdout.buffer.write(data)
+        return
+
+    try:
+        proc.communicate(data)
+    except BrokenPipeError:
+        pass
 
 
 def cmd_log():
