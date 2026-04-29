@@ -1,155 +1,244 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env python3
 
-require 'optparse'
-require 'json'
-require 'fileutils'
-#require 'byebug'
+import json
+import os
+import subprocess
+import sys
+from pathlib import Path
 
-def system(command, exception: true, silent: false)
-  $stdout.puts(command) unless silent
-  super(command, exception: exception)
-end
 
-def user
-  user = ENV.fetch('GIT_STACK_USER', ENV.fetch('USER'))
-end
+def run(command, check=True, silent=False):
+    if not silent:
+        print(command)
+    result = subprocess.run(command, shell=True)
+    if check and result.returncode != 0:
+        raise RuntimeError("command failed: {}".format(command))
+    return result.returncode == 0
 
-def git_stack_branches(branch)
-  JSON.parse(File.read("#{ENV['HOME']}/.git-stack/branches/#{branch}.json")) rescue []
-end
 
-def git_stack_sync_commit(commit, branches)
-  targets = `git notes show #{commit} 2> /dev/null`.strip.split(',')
+def capture(command):
+    result = subprocess.run(
+        command, shell=True,
+        stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+    )
+    return (
+        result.stdout.decode("utf-8", errors="replace"),
+        result.returncode == 0,
+    )
 
-  return unless $?.success?
 
-  targets.each do |target|
-    if branches.include?(target)
-      system("git checkout -q #{target}", exception: true)
-    else
-      system("git checkout -q @{u} -fB #{target}", exception: true)
-      branches << target
-    end
+def confirm(prompt):
+    print(prompt)
+    try:
+        return input().strip().upper() == "Y"
+    except EOFError:
+        return False
 
-    system("git cherry-pick #{commit}", exception: true)
-  end
-end
 
-def git_stack_sync
-  commits = `git log --pretty=format:"%h" @{u}..`
-  branch = `git rev-parse --abbrev-ref HEAD`.strip
+def stack_path(branch):
+    return Path.home() / ".git-stack" / "branches" / "{}.json".format(branch)
 
-  puts "Sync branch #{branch}? (Y/N)"
-  return if STDIN.gets.strip.upcase != 'Y'
 
-  system("git stash push -q", exception: true)
+def current_branch():
+    out, _ = capture("git rev-parse --abbrev-ref HEAD")
+    return out.strip()
 
-  branches = []
 
-  commits.split(/\s+/).reverse.each do |commit|
-    git_stack_sync_commit(commit, branches)
-  end
+def upstream_commits():
+    out, _ = capture('git log --pretty=format:"%h" @{u}..')
+    return out.split()
 
-  branches += git_stack_branches(branch)
 
-  system("git checkout -q #{branch}", exception: true)
+def commit_notes(commit):
+    out, ok = capture("git notes show {}".format(commit))
+    if not ok:
+        return []
+    return [t for t in out.strip().split(",") if t]
 
-  branches = branches.uniq
 
-  FileUtils.mkdir_p(File.dirname("#{ENV['HOME']}/.git-stack/branches/#{branch}.json"))
-  File.write("#{ENV['HOME']}/.git-stack/branches/#{branch}.json", branches.to_json)
-end
+def stored_branches(branch):
+    try:
+        return json.loads(stack_path(branch).read_text())
+    except (OSError, ValueError):
+        return []
 
-def git_stack_rebase
-  branch = `git rev-parse --abbrev-ref HEAD`.strip
 
-  puts "Rebase branch #{branch}? (Y/N)"
-  return if STDIN.gets.strip.upcase != 'Y'
+def write_stored_branches(branch, branches):
+    path = stack_path(branch)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(branches))
 
-  system("git stash push -q", exception: true)
-  system("git rebase -i @{u} --autosquash", exception: true)
-end
 
-def git_stack_push_branch(branch)
-  diff = `git diff origin/#{branch}..#{branch} 2> /dev/null`
+def unique(seq):
+    seen = set()
+    out = []
+    for item in seq:
+        if item not in seen:
+            seen.add(item)
+            out.append(item)
+    return out
 
-  if $?.success? && diff.empty?
-    puts "No changes for #{branch}"
-  else
-    system("git push -fu origin #{branch}", exception: true)
-  end
-end
 
-def git_stack_push
-  commits = `git log --pretty=format:"%h" @{u}..`
+def sync_commit(commit, branches):
+    targets = commit_notes(commit)
+    if not targets:
+        return
+    for target in targets:
+        if target in branches:
+            run("git checkout -q {}".format(target))
+        else:
+            run("git checkout -q @{{u}} -fB {}".format(target))
+            branches.append(target)
+        run("git cherry-pick {}".format(commit))
 
-  branches = commits.split(/\s+/).flat_map do |commit|
-    `git notes show #{commit} 2> /dev/null`.strip.split(',')
-  end
 
-  branches.uniq.each do |branch|
-    git_stack_push_branch(branch) if branch != ''
-  end
-end
+def cmd_sync():
+    commits = upstream_commits()
+    branch = current_branch()
 
-def git_stack_clean
-  commits = `git log --pretty=format:"%h" @{u}..`
-  branch = `git rev-parse --abbrev-ref HEAD`.strip
+    if not confirm("Sync branch {}? (Y/N)".format(branch)):
+        return
 
-  stored_branches = git_stack_branches(branch)
+    run("git stash push -q")
 
-  branches = stored_branches.select do |branch|
-    `git rev-parse --verify #{branch} 2> /dev/null`
-    $?.success?
-  end
+    branches = []
+    for commit in reversed(commits):
+        sync_commit(commit, branches)
 
-  branches -= commits.split(/\s+/).reverse.flat_map do |commit|
-    `git notes show #{commit} 2> /dev/null`.strip.split(',')
-  end
+    branches += stored_branches(branch)
 
-  branches = branches.uniq
+    run("git checkout -q {}".format(branch))
 
-  return if branches.empty?
+    write_stored_branches(branch, unique(branches))
 
-  puts branches.join("\n")
-  puts
-  puts "Delete these branches? (Y/N)"
 
-  return if STDIN.gets.strip.upcase != 'Y'
+def cmd_rebase():
+    branch = current_branch()
 
-  puts
+    if not confirm("Rebase branch {}? (Y/N)".format(branch)):
+        return
 
-  branches.each do |branch|
-    system("git branch -D #{branch}", exception: true, silent: true)
-  end
+    run("git stash push -q")
+    run("git rebase -i @{u} --autosquash")
 
-  File.write("#{ENV['HOME']}/.git-stack-branches", (stored_branches - branches).to_json)
-end
 
-def git_stack_log
-  format = '%C(brightcyan)%h %C(brightblue)%as%C(bold)% N%C(reset) %s %C(magenta)(%al)%d' 
-  system("git log --date=relative --color=always -z --pretty=format:'#{format}' @{u}.. | tr -d '\n' | tr '\\0' '\n' | less -REXS", silent: true)
-end
+def push_branch(branch):
+    diff, ok = capture("git diff origin/{0}..{0}".format(branch))
+    if ok and not diff.strip():
+        print("No changes for {}".format(branch))
+    else:
+        run("git push -fu origin {}".format(branch))
 
-def main
-  command = ARGV.shift
 
-  case command
-  when 'sync'
-    git_stack_sync
-  when 'rebase'
-    git_stack_rebase
-  when 'push'
-    git_stack_push
-  when 'clean'
-    git_stack_clean
-  when 'log'
-    git_stack_log
-  else
-    raise ArgumentError, "usage: git stack sync|rebase|push"
-  end
-rescue => e
-  $stderr.puts("git: #{e.message}")
-end
+def cmd_push():
+    commits = upstream_commits()
+    branches = []
+    for commit in commits:
+        branches.extend(commit_notes(commit))
+    for branch in unique(branches):
+        if branch:
+            push_branch(branch)
 
-main
+
+def cmd_clean():
+    commits = upstream_commits()
+    branch = current_branch()
+
+    stored = stored_branches(branch)
+
+    branches = [
+        b for b in stored
+        if capture("git rev-parse --verify {}".format(b))[1]
+    ]
+
+    active = []
+    for commit in commits:
+        active.extend(commit_notes(commit))
+    active_set = set(active)
+
+    branches = unique([b for b in branches if b not in active_set])
+
+    if not branches:
+        return
+
+    print("\n".join(branches))
+    print()
+
+    if not confirm("Delete these branches? (Y/N)"):
+        return
+
+    print()
+
+    for b in branches:
+        run("git branch -D {}".format(b), silent=True)
+
+    deleted = set(branches)
+    write_stored_branches(branch, [b for b in stored if b not in deleted])
+
+
+def page(data):
+    if not sys.stdout.isatty():
+        sys.stdout.buffer.write(data)
+        return
+
+    pager, ok = capture("git var GIT_PAGER")
+    pager = pager.strip()
+    if not ok or not pager or pager == "cat":
+        sys.stdout.buffer.write(data)
+        return
+
+    env = os.environ.copy()
+    env.setdefault("LESS", "FRX")
+    env.setdefault("LV", "-c")
+
+    try:
+        proc = subprocess.Popen(pager, shell=True, stdin=subprocess.PIPE, env=env)
+    except OSError:
+        sys.stdout.buffer.write(data)
+        return
+
+    try:
+        proc.communicate(data)
+    except BrokenPipeError:
+        pass
+
+
+def cmd_log():
+    fmt = (
+        "%C(brightcyan)%h %C(brightblue)%as%C(bold)% N"
+        "%C(reset) %s %C(magenta)(%al)%d"
+    )
+    result = subprocess.run(
+        [
+            "git", "log", "--date=relative", "--color=always", "-z",
+            "--pretty=format:" + fmt, "@{u}..",
+        ],
+        stdout=subprocess.PIPE,
+    )
+    output = result.stdout.replace(b"\n", b"").replace(b"\0", b"\n") + b"\n"
+    page(output)
+
+
+COMMANDS = {
+    "sync": cmd_sync,
+    "rebase": cmd_rebase,
+    "push": cmd_push,
+    "clean": cmd_clean,
+    "log": cmd_log,
+}
+
+
+def main():
+    args = sys.argv[1:]
+    command = args[0] if args else None
+    try:
+        if command not in COMMANDS:
+            raise ValueError("usage: git stack sync|rebase|push|clean|log")
+        COMMANDS[command]()
+    except Exception as e:
+        sys.stderr.write("git: {}\n".format(e))
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
