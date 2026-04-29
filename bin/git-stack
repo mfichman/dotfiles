@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import json
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -175,6 +176,37 @@ def cmd_clean():
     write_stored_branches(branch, [b for b in stored if b not in deleted])
 
 
+def page(data):
+    if not sys.stdout.isatty():
+        sys.stdout.buffer.write(data)
+        return
+
+    rows = shutil.get_terminal_size((80, 24)).lines
+    lines = data.splitlines(keepends=True)
+
+    if len(lines) <= rows:
+        sys.stdout.buffer.write(data)
+        return
+
+    chunk = max(rows - 1, 1)
+    i = 0
+    while i < len(lines):
+        sys.stdout.buffer.write(b"".join(lines[i:i + chunk]))
+        sys.stdout.buffer.flush()
+        i += chunk
+        if i >= len(lines):
+            return
+        sys.stdout.write(":")
+        sys.stdout.flush()
+        try:
+            reply = input()
+        except (EOFError, KeyboardInterrupt):
+            sys.stdout.write("\n")
+            return
+        if reply.strip().lower() in ("q", "quit"):
+            return
+
+
 def cmd_log():
     fmt = (
         "%C(brightcyan)%h %C(brightblue)%as%C(bold)% N"
@@ -188,21 +220,7 @@ def cmd_log():
         stdout=subprocess.PIPE,
     )
     output = result.stdout.replace(b"\n", b"").replace(b"\0", b"\n") + b"\n"
-
-    if not sys.stdout.isatty():
-        sys.stdout.buffer.write(output)
-        return
-
-    try:
-        pager = subprocess.Popen(["less", "-REXS"], stdin=subprocess.PIPE)
-    except FileNotFoundError:
-        sys.stdout.buffer.write(output)
-        return
-
-    try:
-        pager.communicate(output)
-    except BrokenPipeError:
-        pass
+    page(output)
 
 
 COMMANDS = {
