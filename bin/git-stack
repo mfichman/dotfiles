@@ -171,9 +171,8 @@ def cmd_clean():
     for b in branches:
         run("git branch -D {}".format(b), silent=True)
 
-    # Preserves original Ruby behavior: writes to ~/.git-stack-branches.
-    remaining = [b for b in stored if b not in branches]
-    (Path.home() / ".git-stack-branches").write_text(json.dumps(remaining))
+    deleted = set(branches)
+    write_stored_branches(branch, [b for b in stored if b not in deleted])
 
 
 def cmd_log():
@@ -181,12 +180,29 @@ def cmd_log():
         "%C(brightcyan)%h %C(brightblue)%as%C(bold)% N"
         "%C(reset) %s %C(magenta)(%al)%d"
     )
-    command = (
-        "git log --date=relative --color=always -z "
-        "--pretty=format:'{}' @{{u}}.. "
-        "| tr -d '\\n' | tr '\\0' '\\n' | less -REXS"
-    ).format(fmt)
-    subprocess.run(command, shell=True)
+    result = subprocess.run(
+        [
+            "git", "log", "--date=relative", "--color=always", "-z",
+            "--pretty=format:" + fmt, "@{u}..",
+        ],
+        stdout=subprocess.PIPE,
+    )
+    output = result.stdout.replace(b"\n", b"").replace(b"\0", b"\n") + b"\n"
+
+    if not sys.stdout.isatty():
+        sys.stdout.buffer.write(output)
+        return
+
+    try:
+        pager = subprocess.Popen(["less", "-REXS"], stdin=subprocess.PIPE)
+    except FileNotFoundError:
+        sys.stdout.buffer.write(output)
+        return
+
+    try:
+        pager.communicate(output)
+    except BrokenPipeError:
+        pass
 
 
 COMMANDS = {
