@@ -1,6 +1,7 @@
 *.orig
 *.swp
 .*
+__pycache__/
 bin/sql
 config/nvim/plugin
 config/secrets
