@@ -71,6 +71,24 @@ git rev-parse --verify -q feature-c >/dev/null 2>&1; created=$?
 grep -q feature-c err.txt; check "conflict reported for feature-c" $?
 cd /; rm -rf "$T"
 
+# --- empty pick is skipped ----------------------------------------------
+# A commit whose change already landed upstream replays to no change; it must
+# be skipped (not committed as an empty commit).
+setup_repo
+echo v2 > base.txt; git commit -qam A   # A: base.txt base -> v2
+A=$(git rev-parse HEAD)
+git checkout -q master
+echo v2 > base.txt; git commit -qam "same change, landed upstream"
+git checkout -q work
+"$GIT_STACK" link feat-empty "$A" >/dev/null
+
+run_sync >/dev/null 2>&1; sync_status=$?
+check "sync with only an empty pick exits 0" "$sync_status"
+git rev-parse --verify -q feat-empty >/dev/null 2>&1; check "empty-pick branch created" $?
+[ "$(git rev-list --count master..feat-empty)" = "0" ]; check "empty pick added no commit" $?
+[ "$(git rev-parse feat-empty)" = "$(git rev-parse master)" ]; check "empty-pick branch == upstream" $?
+cd /; rm -rf "$T"
+
 echo
 if [ "$fail" -eq 0 ]; then echo "All tests passed."; else echo "Some tests FAILED."; fi
 exit "$fail"

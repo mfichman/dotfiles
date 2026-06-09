@@ -23,8 +23,9 @@ the object database via
 and
 .BR git-commit-tree (1):
 no branch is checked out, the working tree and index are untouched, and HEAD
-does not move. A branch whose commits cannot be replayed cleanly is left
-unchanged and reported at the end, and
+does not move. A linked commit whose change is already present upstream
+replays to nothing and is skipped. A branch whose commits cannot be replayed
+cleanly is left unchanged and reported at the end, and
 .B sync
 exits non-zero. Prompts for confirmation first.
 .TP

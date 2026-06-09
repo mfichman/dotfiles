@@ -107,12 +107,21 @@ end
 # Rebuild `target` as upstream + `commits` (oldest-first), entirely in the
 # object database, then atomically move the ref. Returns nil on success or a
 # conflict descriptor on failure (the existing branch is left untouched).
+def git_tree_of(rev)
+  out, _, status = Open3.capture3('git', 'rev-parse', "#{rev}^{tree}")
+  raise "failed to resolve tree of #{rev}" unless status.success?
+  out.strip
+end
+
 def git_stack_build_branch(target, upstream_sha, commits)
   tip = upstream_sha
+  tip_tree = git_tree_of(upstream_sha)
   commits.each do |commit|
     tree, conflict_files = git_stack_cherry_pick(tip, commit)
     return { branch: target, commit: commit, files: conflict_files } if conflict_files
+    next if tree == tip_tree # empty pick: changes already present upstream, skip
     tip = git_stack_commit_tree(tree, tip, commit)
+    tip_tree = tree
   end
   system('git', 'update-ref', "refs/heads/#{target}", tip, silent: true)
   nil
