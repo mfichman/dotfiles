@@ -62,7 +62,13 @@ def git_stack_sync_commit(commit, branches, upstream)
       branches << target
     end
 
-    system('git', 'cherry-pick', commit, exception: true)
+    original_sha = `git rev-parse HEAD`.strip
+    unless system('git', 'cherry-pick', commit, exception: false)
+      system('git', 'cherry-pick', '--abort', exception: false, silent: true)
+      system('git', 'reset', '--hard', original_sha, exception: false, silent: true)
+      $stderr.puts("\e[31mFailed to cherry-pick #{commit} onto #{target}; skipping\e[0m")
+      next
+    end
   end
 end
 
@@ -71,7 +77,7 @@ def git_stack_sync
   branch = `git rev-parse --abbrev-ref HEAD`.strip
   upstream = `git rev-parse --abbrev-ref @{u}`.strip
 
-  puts "Sync branch #{branch}? (Y/N)"
+  $stdout.puts "Sync branch #{branch}? (Y/N)"
   return if STDIN.gets.strip.upcase != 'Y'
 
   system("git stash push -q", exception: true)
@@ -94,7 +100,7 @@ end
 def git_stack_rebase
   branch = `git rev-parse --abbrev-ref HEAD`.strip
 
-  puts "Rebase branch #{branch}? (Y/N)"
+  $stdout.puts "Rebase branch #{branch}? (Y/N)"
   return if STDIN.gets.strip.upcase != 'Y'
 
   system("git stash push -q", exception: true)
@@ -105,9 +111,11 @@ def git_stack_push_branch(branch)
   diff, _, status = Open3.capture3('git', 'diff', "origin/#{branch}..#{branch}")
 
   if status.success? && diff.empty?
-    puts "No changes for #{branch}"
+    $stdout.puts "No changes for #{branch}"
   else
-    system('git', 'push', '-fu', 'origin', branch, exception: true)
+    unless system('git', 'push', '-fu', 'origin', branch, exception: false)
+      $stderr.puts("\e[31mFailed to push #{branch}; skipping\e[0m")
+    end
   end
 end
 
@@ -127,41 +135,87 @@ def git_stack_clean
 
   stored_branches = git_stack_branches(branch)
 
-  branches = stored_branches.select do |branch|
-    `git rev-parse --verify #{branch} 2> /dev/null`
-    $?.success?
+  branches = stored_branches.select do |b|
+    _, _, status = Open3.capture3('git', 'rev-parse', '--verify', b)
+    status.success?
   end
 
-  branches -= commits.split(/\s+/).reverse.flat_map do |commit|
-    `git notes show #{commit} 2> /dev/null`.strip.split(',')
-  end
+  branches -= commits.split(/\s+/).reverse.flat_map { |commit| git_stack_notes(commit) }
 
   branches = branches.uniq
 
   return if branches.empty?
 
-  puts branches.join("\n")
-  puts
-  puts "Delete these branches? (Y/N)"
+  $stdout.puts branches.join("\n")
+  $stdout.puts
+  $stdout.puts "Delete these branches? (Y/N)"
 
   return if STDIN.gets.strip.upcase != 'Y'
 
-  puts
+  $stdout.puts
 
-  branches.each do |branch|
-    system("git branch -D #{branch}", exception: true, silent: true)
+  branches.each do |b|
+    system('git', 'branch', '-D', b, exception: true, silent: true)
   end
 
-  File.write("#{ENV['HOME']}/.git-stack-branches", (stored_branches - branches).to_json)
+  git_stack_branches_write(branch, stored_branches - branches)
 end
 
 def git_stack_log
-  format = '%C(brightcyan)%h %C(brightblue)%as%C(bold)% N%C(reset) %s %C(magenta)(%al)%d' 
-  system("git log --date=relative --color=always -z --pretty=format:'#{format}' @{u}.. | tr -d '\n' | tr '\\0' '\n' | less -REXS", silent: true)
+  format = '%C(brightcyan)%h %C(brightblue)%as%C(bold)% N%C(reset) %s %C(magenta)(%al)%d'
+  system("git log --date=relative --color=always -z --pretty=format:'#{format}' @{u}.. | tr '\n' ' ' | tr '\\0' '\n' | less -REXS", silent: true)
+end
+
+def resolve_commits(specs)
+  commits = []
+  specs.each do |spec|
+    if spec.include?('..')
+      out, _, status = Open3.capture3('git', 'rev-list', spec)
+      raise "failed to resolve range #{spec}" unless status.success?
+      commits.concat(out.split.reject(&:empty?))
+    else
+      out, _, status = Open3.capture3('git', 'rev-parse', "#{spec}^{commit}")
+      raise "failed to resolve commit #{spec}" unless status.success?
+      commits << out.strip
+    end
+  end
+  commits.uniq
+end
+
+def git_stack_set_branch
+  branch = ARGV.shift
+  raise ArgumentError, "usage: git stack set-branch <branch> <commit-or-range>..." if branch.nil? || ARGV.empty?
+
+  resolve_commits(ARGV).each do |commit|
+    existing = git_stack_notes(commit)
+    next if existing.include?(branch)
+
+    existing << branch
+    system('git', 'notes', 'add', '-fm', existing.join("\n"), commit, exception: true)
+  end
+end
+
+def git_stack_unset_branch
+  branch = ARGV.shift
+  raise ArgumentError, "usage: git stack unset-branch <branch> <commit-or-range>..." if branch.nil? || ARGV.empty?
+
+  resolve_commits(ARGV).each do |commit|
+    existing = git_stack_notes(commit)
+    next unless existing.include?(branch)
+
+    existing -= [branch]
+    if existing.empty?
+      system('git', 'notes', 'remove', commit, exception: true)
+    else
+      system('git', 'notes', 'add', '-fm', existing.join("\n"), commit, exception: true)
+    end
+  end
 end
 
 def main
   command = ARGV.shift
+
+  ensure_notes_rewrite
 
   case command
   when 'sync'
@@ -174,8 +228,12 @@ def main
     git_stack_clean
   when 'log'
     git_stack_log
+  when 'set-branch'
+    git_stack_set_branch
+  when 'unset-branch'
+    git_stack_unset_branch
   else
-    raise ArgumentError, "usage: git stack sync|rebase|push"
+    raise ArgumentError, "usage: git stack sync|rebase|push|clean|log|set-branch|unset-branch"
   end
 rescue => e
   $stderr.puts("git: #{e.message}")
