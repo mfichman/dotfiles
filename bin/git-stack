@@ -2,42 +2,74 @@
 
 require 'optparse'
 require 'json'
-require 'fileutils'
+require 'open3'
 #require 'byebug'
 
-def system(command, exception: true, silent: false)
-  $stdout.puts(command) unless silent
-  super(command, exception: exception)
+def system(*command, exception: true, silent: false)
+  $stdout.puts(command.length == 1 ? command.first : command.join(' ')) unless silent
+  super(*command, exception: exception)
 end
 
-def user
-  user = ENV.fetch('GIT_STACK_USER', ENV.fetch('USER'))
+def encode_ref_segment(name)
+  name.gsub('%', '%25').gsub('/', '%2F')
 end
 
-def git_stack_branches(branch)
-  JSON.parse(File.read("#{ENV['HOME']}/.git-stack/branches/#{branch}.json")) rescue []
+def stack_ref(parent)
+  "refs/git-stack/#{encode_ref_segment(parent)}"
 end
 
-def git_stack_sync_commit(commit, branches)
-  targets = `git notes show #{commit} 2> /dev/null`.strip.split(',')
+def git_stack_notes(commit)
+  out, _, status = Open3.capture3('git', 'notes', 'show', commit)
+  return [] unless status.success?
+  # Tolerate the legacy comma-separated format alongside the newline format.
+  out.split(/[,\n]/).map(&:strip).reject(&:empty?).uniq
+end
 
-  return unless $?.success?
+def ensure_notes_rewrite
+  out, _, status = Open3.capture3('git', 'config', '--get-all', 'notes.rewriteRef')
+  return if status.success? && out.lines.map(&:strip).include?('refs/notes/commits')
+  system('git', 'config', '--add', 'notes.rewriteRef', 'refs/notes/commits', silent: true)
+end
+
+def git_stack_branches(parent)
+  ref = stack_ref(parent)
+  sha, _, status = Open3.capture3('git', 'rev-parse', '--verify', '-q', ref)
+  return [] unless status.success?
+  blob, _, blob_status = Open3.capture3('git', 'cat-file', 'blob', sha.strip)
+  return [] unless blob_status.success?
+  JSON.parse(blob)
+rescue JSON::ParserError
+  []
+end
+
+def git_stack_branches_write(parent, branches)
+  blob_sha, _, status = Open3.capture3(
+    'git', 'hash-object', '-w', '--stdin', stdin_data: branches.to_json
+  )
+  raise "failed to write stack branches blob" unless status.success?
+  system('git', 'update-ref', stack_ref(parent), blob_sha.strip, silent: true)
+end
+
+def git_stack_sync_commit(commit, branches, upstream)
+  targets = git_stack_notes(commit)
+  return if targets.empty?
 
   targets.each do |target|
     if branches.include?(target)
-      system("git checkout -q #{target}", exception: true)
+      system('git', 'checkout', '-q', target, exception: true)
     else
-      system("git checkout -q @{u} -fB #{target}", exception: true)
+      system('git', 'checkout', '-q', upstream, '-fB', target, exception: true)
       branches << target
     end
 
-    system("git cherry-pick #{commit}", exception: true)
+    system('git', 'cherry-pick', commit, exception: true)
   end
 end
 
 def git_stack_sync
   commits = `git log --pretty=format:"%h" @{u}..`
   branch = `git rev-parse --abbrev-ref HEAD`.strip
+  upstream = `git rev-parse --abbrev-ref @{u}`.strip
 
   puts "Sync branch #{branch}? (Y/N)"
   return if STDIN.gets.strip.upcase != 'Y'
@@ -47,17 +79,16 @@ def git_stack_sync
   branches = []
 
   commits.split(/\s+/).reverse.each do |commit|
-    git_stack_sync_commit(commit, branches)
+    git_stack_sync_commit(commit, branches, upstream)
   end
 
   branches += git_stack_branches(branch)
 
-  system("git checkout -q #{branch}", exception: true)
+  system('git', 'checkout', '-q', branch, exception: true)
 
   branches = branches.uniq
 
-  FileUtils.mkdir_p(File.dirname("#{ENV['HOME']}/.git-stack/branches/#{branch}.json"))
-  File.write("#{ENV['HOME']}/.git-stack/branches/#{branch}.json", branches.to_json)
+  git_stack_branches_write(branch, branches)
 end
 
 def git_stack_rebase
@@ -71,21 +102,19 @@ def git_stack_rebase
 end
 
 def git_stack_push_branch(branch)
-  diff = `git diff origin/#{branch}..#{branch} 2> /dev/null`
+  diff, _, status = Open3.capture3('git', 'diff', "origin/#{branch}..#{branch}")
 
-  if $?.success? && diff.empty?
+  if status.success? && diff.empty?
     puts "No changes for #{branch}"
   else
-    system("git push -fu origin #{branch}", exception: true)
+    system('git', 'push', '-fu', 'origin', branch, exception: true)
   end
 end
 
 def git_stack_push
   commits = `git log --pretty=format:"%h" @{u}..`
 
-  branches = commits.split(/\s+/).flat_map do |commit|
-    `git notes show #{commit} 2> /dev/null`.strip.split(',')
-  end
+  branches = commits.split(/\s+/).flat_map { |commit| git_stack_notes(commit) }
 
   branches.uniq.each do |branch|
     git_stack_push_branch(branch) if branch != ''
