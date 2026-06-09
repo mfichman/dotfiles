@@ -15,10 +15,18 @@ build, push, and prune those branches from the linked commits.
 .SH COMMANDS
 .TP
 .B sync
-Cherry-pick each commit onto its noted branch(es), rebuilding each branch
-from
-.IR @{u} .
-Stashes the working tree first and prompts for confirmation.
+Rebuild each linked branch as
+.I @{u}
+plus its linked commits, replayed in order. The replay happens entirely in
+the object database via
+.BR git-merge-tree (1)
+and
+.BR git-commit-tree (1):
+no branch is checked out, the working tree and index are untouched, and HEAD
+does not move. A branch whose commits cannot be replayed cleanly is left
+unchanged and reported at the end, and
+.B sync
+exits non-zero. Prompts for confirmation first.
 .TP
 .B rebase
 Run an interactive autosquash rebase onto
@@ -76,4 +84,6 @@ A repository lock
 in the git dir) serializes mutating operations.
 .SH SEE ALSO
 .BR git-notes (1),
-.BR git-rebase (1)
+.BR git-rebase (1),
+.BR git-merge-tree (1),
+.BR git-commit-tree (1)

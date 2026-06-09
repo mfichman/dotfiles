@@ -66,51 +66,96 @@ def git_stack_branches_write(parent, branches)
   system('git', 'update-ref', stack_ref(parent), blob_sha.strip, silent: true)
 end
 
-def git_stack_sync_commit(commit, branches, upstream)
-  targets = git_stack_notes(commit)
-  return if targets.empty?
+# The empty tree object; used as the merge base when cherry-picking a root
+# commit (one with no parent). Stack commits always have a parent, so this is
+# just a safety fallback.
+EMPTY_TREE = '4b825dc642cb6eb9a060e54bf8d69288fbee4904'
 
-  targets.each do |target|
-    if branches.include?(target)
-      system('git', 'checkout', '-q', target, exception: true)
-    else
-      system('git', 'checkout', '-q', upstream, '-fB', target, exception: true)
-      branches << target
-    end
+# In-memory cherry-pick of `commit` onto `tip`: a 3-way merge with base
+# commit^, ours `tip`, theirs `commit`. Touches neither HEAD, the index, nor
+# the working tree. Returns [tree_sha, nil] on success or [nil, [files]] on
+# conflict (the conflicted tree is written but discarded by the caller).
+def git_stack_cherry_pick(tip, commit)
+  base, _, st = Open3.capture3('git', 'rev-parse', '--verify', '-q', "#{commit}^")
+  base = st.success? ? base.strip : EMPTY_TREE
 
-    original_sha = `git rev-parse HEAD`.strip
-    unless system('git', 'cherry-pick', commit, exception: false)
-      system('git', 'cherry-pick', '--abort', exception: false, silent: true)
-      system('git', 'reset', '--hard', original_sha, exception: false, silent: true)
-      $stderr.puts("\e[31mFailed to cherry-pick #{commit} onto #{target}; skipping\e[0m")
-      next
-    end
+  out, _, status = Open3.capture3(
+    'git', 'merge-tree', '--write-tree', "--merge-base=#{base}", tip, commit
+  )
+  lines = out.split("\n")
+  tree = lines.shift&.strip
+  return [tree, nil] if status.success?
+
+  files = lines.map { |l| l[/\t(.+)\z/, 1] }.compact.uniq
+  [nil, files]
+end
+
+# Create a commit with `tree` and parent `parent`, preserving the author
+# (name/email/date) and message of `commit`. Committer defaults to the current
+# user/time, matching cherry-pick.
+def git_stack_commit_tree(tree, parent, commit)
+  meta, _, status = Open3.capture3('git', 'show', '-s', '--format=%an%n%ae%n%aI%n%B', commit)
+  raise "failed to read #{commit}" unless status.success?
+  name, email, date, *message = meta.split("\n")
+
+  env = { 'GIT_AUTHOR_NAME' => name, 'GIT_AUTHOR_EMAIL' => email, 'GIT_AUTHOR_DATE' => date }
+  out, err, status = Open3.capture3(env, 'git', 'commit-tree', tree, '-p', parent, '-m', message.join("\n"))
+  raise "commit-tree failed: #{err.strip}" unless status.success?
+  out.strip
+end
+
+# Rebuild `target` as upstream + `commits` (oldest-first), entirely in the
+# object database, then atomically move the ref. Returns nil on success or a
+# conflict descriptor on failure (the existing branch is left untouched).
+def git_stack_build_branch(target, upstream_sha, commits)
+  tip = upstream_sha
+  commits.each do |commit|
+    tree, conflict_files = git_stack_cherry_pick(tip, commit)
+    return { branch: target, commit: commit, files: conflict_files } if conflict_files
+    tip = git_stack_commit_tree(tree, tip, commit)
   end
+  system('git', 'update-ref', "refs/heads/#{target}", tip, silent: true)
+  nil
 end
 
 def git_stack_sync
-  commits = `git log --pretty=format:"%h" @{u}..`
   branch = `git rev-parse --abbrev-ref HEAD`.strip
-  upstream = `git rev-parse --abbrev-ref @{u}`.strip
+  upstream_sha = `git rev-parse @{u}`.strip
+  commits = `git log --pretty=format:"%H" @{u}..`.split("\n").reject(&:empty?).reverse
 
   $stdout.puts "Sync branch #{branch}? (Y/N)"
   return if STDIN.gets.strip.upcase != 'Y'
 
-  system("git stash push -q", exception: true)
-
-  branches = []
-
-  commits.split(/\s+/).reverse.each do |commit|
-    git_stack_sync_commit(commit, branches, upstream)
+  # Map each linked branch to its commits, in stack (oldest-first) order.
+  targets = {}
+  commits.each do |commit|
+    git_stack_notes(commit).each { |t| (targets[t] ||= []) << commit }
   end
 
-  branches += git_stack_branches(branch)
+  synced = []
+  conflicts = []
+  targets.each do |target, target_commits|
+    conflict = git_stack_build_branch(target, upstream_sha, target_commits)
+    if conflict
+      conflicts << conflict
+    else
+      synced << target
+      $stdout.puts "Synced #{target}"
+    end
+  end
 
-  system('git', 'checkout', '-q', branch, exception: true)
+  # Record the branch set (synced now + previously recorded) so `clean` can
+  # later prune branches that are no longer linked.
+  git_stack_branches_write(branch, (synced + git_stack_branches(branch)).uniq)
 
-  branches = branches.uniq
+  return if conflicts.empty?
 
-  git_stack_branches_write(branch, branches)
+  $stderr.puts
+  conflicts.each do |c|
+    $stderr.puts("\e[31mConflict on #{c[:branch]} applying #{c[:commit][0, 9]}; branch left unchanged\e[0m")
+    c[:files].each { |f| $stderr.puts("  #{f}") }
+  end
+  raise "#{conflicts.length} branch(es) skipped due to conflict"
 end
 
 def git_stack_rebase
@@ -262,9 +307,10 @@ end
 SUBCOMMANDS = {
   'sync' => {
     parser: subcommand_parser('sync',
-      'Cherry-pick each commit in @{u}..HEAD onto its linked branch(es),',
-      'rebuilding each branch from @{u}. Stashes the working tree and prompts',
-      'before running. Takes no arguments.'),
+      'Rebuild each linked branch as @{u} plus its linked commits, replayed in',
+      'order entirely in the object database -- no checkout, no stash, HEAD is',
+      'not moved. Conflicting branches are left unchanged and reported at the',
+      'end (sync then exits non-zero). Prompts first. Takes no arguments.'),
     run: -> { with_repo_lock { git_stack_sync } },
   },
   'rebase' => {
