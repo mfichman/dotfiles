@@ -1,0 +1,79 @@
+.TH GIT-STACK 1 "" "" "Git Stack Manual"
+.SH NAME
+git-stack \- manage a stack of branches encoded as git notes
+.SH SYNOPSIS
+.B git stack
+.I command
+.RI [ args ]
+.SH DESCRIPTION
+.B git stack
+manages a stack of branches encoded as git notes on the commits in the
+range
+.IR @{u}..HEAD .
+Each commit may be linked to one or more branch names; the subcommands
+build, push, and prune those branches from the linked commits.
+.SH COMMANDS
+.TP
+.B sync
+Cherry-pick each commit onto its noted branch(es), rebuilding each branch
+from
+.IR @{u} .
+Stashes the working tree first and prompts for confirmation.
+.TP
+.B rebase
+Run an interactive autosquash rebase onto
+.IR @{u} ,
+applying any
+.B --fixup
+or
+.B --squash
+commits. Stashes first and prompts for confirmation.
+.TP
+.B push
+Force-push
+.RB ( "git push -fu origin" )
+each branch named in the stack's commit notes. Branches with no diff
+against their remote are skipped.
+.TP
+.B clean
+Delete local stack branches that are no longer referenced by any commit
+note. Lists the branches and prompts for confirmation.
+.TP
+.B log
+Pretty-print the commits in
+.I @{u}..HEAD
+along with each commit's branch notes.
+.TP
+.BI "link " "branch spec..."
+Link the resolved commit(s) to
+.IR branch .
+Each
+.I spec
+is a single commit or a range
+.RI ( a..b ).
+A commit may be linked to multiple branches.
+.TP
+.BI "unlink " "branch spec..."
+Unlink the resolved commit(s) from
+.IR branch .
+The note is deleted when its last branch is removed.
+.TP
+.BR help ", " --help ", " -h
+Show usage. Note that
+.B git stack --help
+is intercepted by git itself (rewritten to a manpage lookup); use
+.B git stack help
+or
+.B git-stack --help
+to reach the script's own handler.
+.SH NOTES
+Branch membership is stored in
+.I refs/notes/commits
+and in per-branch refs under
+.IR refs/git-stack/ .
+A repository lock
+.RI ( git-stack.lock
+in the git dir) serializes mutating operations.
+.SH SEE ALSO
+.BR git-notes (1),
+.BR git-rebase (1)

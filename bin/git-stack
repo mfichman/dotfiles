@@ -10,6 +10,22 @@ def system(*command, exception: true, silent: false)
   super(*command, exception: exception)
 end
 
+def with_repo_lock
+  git_dir = `git rev-parse --git-dir`.strip
+  raise "not a git repository" if git_dir.empty? || !$?.success?
+  lock_path = File.join(git_dir, 'git-stack.lock')
+  lock = File.open(lock_path, File::CREAT | File::RDWR, 0644)
+  unless lock.flock(File::LOCK_EX | File::LOCK_NB)
+    raise "another git stack operation is in progress (#{lock_path})"
+  end
+  begin
+    yield
+  ensure
+    lock.flock(File::LOCK_UN)
+    lock.close
+  end
+end
+
 def encode_ref_segment(name)
   name.gsub('%', '%25').gsub('/', '%2F')
 end
@@ -182,9 +198,9 @@ def resolve_commits(specs)
   commits.uniq
 end
 
-def git_stack_set_branch
+def git_stack_link
   branch = ARGV.shift
-  raise ArgumentError, "usage: git stack set-branch <branch> <commit-or-range>..." if branch.nil? || ARGV.empty?
+  raise ArgumentError, "usage: git stack link <branch> <commit-or-range>..." if branch.nil? || ARGV.empty?
 
   resolve_commits(ARGV).each do |commit|
     existing = git_stack_notes(commit)
@@ -195,9 +211,9 @@ def git_stack_set_branch
   end
 end
 
-def git_stack_unset_branch
+def git_stack_unlink
   branch = ARGV.shift
-  raise ArgumentError, "usage: git stack unset-branch <branch> <commit-or-range>..." if branch.nil? || ARGV.empty?
+  raise ArgumentError, "usage: git stack unlink <branch> <commit-or-range>..." if branch.nil? || ARGV.empty?
 
   resolve_commits(ARGV).each do |commit|
     existing = git_stack_notes(commit)
@@ -212,31 +228,104 @@ def git_stack_unset_branch
   end
 end
 
-def main
-  command = ARGV.shift
-
-  ensure_notes_rewrite
-
-  case command
-  when 'sync'
-    git_stack_sync
-  when 'rebase'
-    git_stack_rebase
-  when 'push'
-    git_stack_push
-  when 'clean'
-    git_stack_clean
-  when 'log'
-    git_stack_log
-  when 'set-branch'
-    git_stack_set_branch
-  when 'unset-branch'
-    git_stack_unset_branch
-  else
-    raise ArgumentError, "usage: git stack sync|rebase|push|clean|log|set-branch|unset-branch"
+def global_parser
+  OptionParser.new do |o|
+    o.banner = 'usage: git stack <command> [args]'
+    o.separator ''
+    o.separator 'Manage a stack of branches encoded as git notes on commits in @{u}..HEAD.'
+    o.separator ''
+    o.separator 'Commands:'
+    o.separator '  sync                       Cherry-pick each commit onto its linked branch(es), rebuilding them from @{u}.'
+    o.separator '  rebase                     Interactive autosquash rebase onto @{u} (applies --fixup/--squash commits).'
+    o.separator '  push                       Force-push (origin, -fu) each branch linked from the stack.'
+    o.separator '  clean                      Delete local stack branches no longer linked by any commit note.'
+    o.separator "  log                        Pretty-print @{u}..HEAD with each commit's linked branches."
+    o.separator '  link <branch> <spec>...    Link commit(s) to <branch>. <spec> is a commit or range (a..b).'
+    o.separator '  unlink <branch> <spec>...  Unlink commit(s) from <branch>; drops the note when empty.'
+    o.separator ''
+    o.separator 'Run "git stack <command> --help" for details on a command.'
   end
+end
+
+def subcommand_parser(usage, *description)
+  OptionParser.new do |o|
+    o.banner = "usage: git stack #{usage}"
+    o.separator ''
+    description.each { |line| o.separator line }
+    o.on_tail('-h', '--help', 'Show this help') do
+      puts o
+      exit
+    end
+  end
+end
+
+SUBCOMMANDS = {
+  'sync' => {
+    parser: subcommand_parser('sync',
+      'Cherry-pick each commit in @{u}..HEAD onto its linked branch(es),',
+      'rebuilding each branch from @{u}. Stashes the working tree and prompts',
+      'before running. Takes no arguments.'),
+    run: -> { with_repo_lock { git_stack_sync } },
+  },
+  'rebase' => {
+    parser: subcommand_parser('rebase',
+      'Interactive autosquash rebase onto @{u}, folding --fixup/--squash commits',
+      'into their targets. Stashes the working tree and prompts before running.',
+      'Takes no arguments.'),
+    run: -> { with_repo_lock { git_stack_rebase } },
+  },
+  'push' => {
+    parser: subcommand_parser('push',
+      'Force-push (git push -fu origin) each branch linked from commits in',
+      '@{u}..HEAD. Branches with no diff against their remote are skipped.',
+      'Takes no arguments.'),
+    run: -> { with_repo_lock { git_stack_push } },
+  },
+  'clean' => {
+    parser: subcommand_parser('clean',
+      'Delete local stack branches that are no longer linked by any commit note.',
+      'Lists the branches and prompts before deleting. Takes no arguments.'),
+    run: -> { with_repo_lock { git_stack_clean } },
+  },
+  'log' => {
+    parser: subcommand_parser('log',
+      "Pretty-print the commits in @{u}..HEAD with each commit's linked branches.",
+      'Takes no arguments.'),
+    run: -> { git_stack_log },
+  },
+  'link' => {
+    parser: subcommand_parser('link <branch> <commit-or-range>...',
+      'Link the given commit(s) to <branch>. Each argument is a single commit or',
+      'a range (a..b). A commit may be linked to multiple branches.'),
+    run: -> { git_stack_link },
+  },
+  'unlink' => {
+    parser: subcommand_parser('unlink <branch> <commit-or-range>...',
+      "Unlink the given commit(s) from <branch>. The commit's note is removed",
+      'when its last branch is unlinked.'),
+    run: -> { git_stack_unlink },
+  },
+}.freeze
+
+def main
+  if ARGV.empty? || %w[help -h --help].include?(ARGV.first)
+    puts global_parser
+    return
+  end
+
+  command = ARGV.shift
+  spec = SUBCOMMANDS[command]
+  unless spec
+    warn global_parser
+    exit 1
+  end
+
+  spec[:parser].parse!(ARGV)
+  ensure_notes_rewrite
+  spec[:run].call
 rescue => e
-  $stderr.puts("git: #{e.message}")
+  warn "git: #{e.message}"
+  exit 1
 end
 
 main
